@@ -214,7 +214,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1125924674
+--- !u!1 &1240795306
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,54 +222,104 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1125924676}
-  - component: {fileID: 1125924675}
+  - component: {fileID: 1240795307}
+  - component: {fileID: 1240795308}
   m_Layer: 0
-  m_Name: DungeonGenerator
+  m_Name: DungeonEntryPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1125924675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1125924674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9574f6d9dba9b9449d54546a739b620, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridWidth: 7
-  gridHeight: 7
-  roomSize: 60
-  spacing: 120
-  roomPrefab: {fileID: 4897718729199340241, guid: f10df43ee4675774cb669cbb0a4858d5, type: 3}
-  linePrefab: {fileID: 4683904666200967589, guid: 3eb9846a1b957aa47b869fd7afc15529, type: 3}
-  minRoomCount: 14
-  maxRoomCount: 20
-  branchProbability: 0.3
-  maxBranchDepth: 2
-  maxBranchCount: 4
-  maxRetries: 20
---- !u!4 &1125924676
+--- !u!4 &1240795307
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1125924674}
+  m_GameObject: {fileID: 1240795306}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
+  m_Father: {fileID: 1937452936}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1240795308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240795306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2df3a13097f3bd4da124dbff460d390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1937452935
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1937452936}
+  - component: {fileID: 1937452937}
+  m_Layer: 0
+  m_Name: DungeonLifetimeScope
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1937452936
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937452935}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1240795307}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1937452937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937452935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 626142674aa52df43a5ec2162b1a897f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentReference:
+    TypeName: 
+  autoRun: 1
+  autoInjectGameObjects: []
+  _roomPrefab: {fileID: 4897718729199340241, guid: f10df43ee4675774cb669cbb0a4858d5, type: 3}
+  _linePrefab: {fileID: 4683904666200967589, guid: 3eb9846a1b957aa47b869fd7afc15529, type: 3}
+  _settings:
+    GridWidth: 7
+    GridHeight: 7
+    RoomSize: 60
+    Spacing: 120
+    MinRoomCount: 6
+    MaxRoomCount: 20
+    BranchProbability: 0.3
+    MaxBranchDepth: 2
+    MaxBranchCount: 4
+    MaxRetries: 20
 --- !u!1001 &2000271591
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -332,5 +382,5 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 519420032}
-  - {fileID: 1125924676}
   - {fileID: 2000271591}
+  - {fileID: 1937452936}
