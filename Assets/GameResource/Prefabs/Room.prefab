@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5714346949142464263}
   - component: {fileID: 4038287084915382183}
   - component: {fileID: 1803233207717982804}
-  - component: {fileID: 493065612119283485}
   m_Layer: 0
   m_Name: Room
   m_TagString: Untagged
@@ -66,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e0ef8ea4f587c9e429e536327b9cb795, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 47ba4575580405f47ae006d74cc14a30, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -76,15 +75,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &493065612119283485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4897718729199340241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf1a8f0bb4b9d2344870ca2340edc26f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

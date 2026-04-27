@@ -313,7 +313,7 @@ MonoBehaviour:
     GridWidth: 7
     GridHeight: 7
     RoomSize: 60
-    Spacing: 120
+    Spacing: 240
     MinRoomCount: 6
     MaxRoomCount: 20
     BranchProbability: 0.3
