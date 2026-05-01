@@ -67,13 +67,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 5
     - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 1
-      Data: Main.GM.GmPanelWindow
+      Data: Main.UI.GoldWin
     - Name: $v
       Entry: 7
       Data: 3|JKFrame.UIWindowData, JKFrame
@@ -82,10 +82,118 @@ MonoBehaviour:
       Data: true
     - Name: assetPath
       Entry: 1
-      Data: UI/GMPanel
+      Data: GoldWin
+    - Name: layerNum
+      Entry: 3
+      Data: 0
+    - Name: instance
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Main.GM.GmPanelWindow
+    - Name: $v
+      Entry: 7
+      Data: 4|JKFrame.UIWindowData, JKFrame
+    - Name: isCache
+      Entry: 5
+      Data: true
+    - Name: assetPath
+      Entry: 1
+      Data: GMPanel
     - Name: layerNum
       Entry: 3
       Data: 4
+    - Name: instance
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Features.Town.UI.CombatEntriesWin
+    - Name: $v
+      Entry: 7
+      Data: 5|JKFrame.UIWindowData, JKFrame
+    - Name: isCache
+      Entry: 5
+      Data: false
+    - Name: assetPath
+      Entry: 1
+      Data: CombatEntriesWin
+    - Name: layerNum
+      Entry: 3
+      Data: 1
+    - Name: instance
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Features.Town.UI.TownBuildWin
+    - Name: $v
+      Entry: 7
+      Data: 6|JKFrame.UIWindowData, JKFrame
+    - Name: isCache
+      Entry: 5
+      Data: false
+    - Name: assetPath
+      Entry: 1
+      Data: TownBuildWin
+    - Name: layerNum
+      Entry: 3
+      Data: 1
+    - Name: instance
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Features.Town.UI.TownButtonsWin
+    - Name: $v
+      Entry: 7
+      Data: 7|JKFrame.UIWindowData, JKFrame
+    - Name: isCache
+      Entry: 5
+      Data: false
+    - Name: assetPath
+      Entry: 1
+      Data: TownButtonsWin
+    - Name: layerNum
+      Entry: 3
+      Data: 1
     - Name: instance
       Entry: 6
       Data: 

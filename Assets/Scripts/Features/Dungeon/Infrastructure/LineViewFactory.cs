@@ -1,4 +1,3 @@
-using Features.Dungeon;
 using Features.Dungeon.Application;
 using Features.Dungeon.Domain;
 using UnityEngine;
@@ -28,13 +27,13 @@ namespace Features.Dungeon.Infrastructure
             {
                 go = new GameObject("Line", typeof(RectTransform), typeof(Image));
                 go.transform.SetParent(container, false);
-                var img = go.GetComponent<Image>();
+                Image img = go.GetComponent<Image>();
                 img.color = Color.white;
             }
 
             go.name = $"Line_{data.From.X}_{data.From.Y}_{data.To.X}_{data.To.Y}";
 
-            var lineView = go.GetComponent<LineView>();
+            LineView lineView = go.GetComponent<LineView>();
             if (lineView == null)
                 lineView = go.AddComponent<LineView>();
 

@@ -39,7 +39,7 @@ namespace Main.GM
             _entries.Clear();
         }
 
-        public int Count => _entries.Count;
+        public int Count { get => _entries.Count; }
 
         public class CommandEntry
         {

@@ -7,7 +7,6 @@ namespace Services
     public static class DataTableCache
     {
         #region 配置表缓存
-
         // public static Dictionary<int, MonsterConfig> MonsterConfigDic { get; private set; }
         #endregion
 

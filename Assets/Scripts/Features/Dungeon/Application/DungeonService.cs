@@ -35,18 +35,18 @@ namespace Features.Dungeon.Application
 
             Vector2 gridOrigin = GetGridOrigin();
 
-            foreach (var roomData in result.Rooms)
+            foreach (RoomData roomData in result.Rooms)
             {
-                Vector2 position = new Vector2(
+                Vector2 position = new(
                     gridOrigin.x + roomData.Position.X * _settings.Spacing,
                     gridOrigin.y + roomData.Position.Y * _settings.Spacing
                 );
 
-                var roomView = _roomFactory.Create(roomData, position, _canvasSetup.RoomsContainer);
+                RoomView roomView = _roomFactory.Create(roomData, position, _canvasSetup.RoomsContainer);
                 roomView.Setup(roomData.Position.X, roomData.Position.Y, roomData.Type);
             }
 
-            foreach (var lineData in result.Lines)
+            foreach (LineData lineData in result.Lines)
             {
                 Vector2 fromPos = WorldToRoomCenter(lineData.From, gridOrigin);
                 Vector2 toPos = WorldToRoomCenter(lineData.To, gridOrigin);

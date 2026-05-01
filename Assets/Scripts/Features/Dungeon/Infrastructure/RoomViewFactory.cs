@@ -1,4 +1,3 @@
-using Features.Dungeon;
 using Features.Dungeon.Application;
 using Features.Dungeon.Domain;
 using UnityEngine;
@@ -30,11 +29,11 @@ namespace Features.Dungeon.Infrastructure
                 go.transform.SetParent(container, false);
             }
 
-            var roomView = go.GetComponent<RoomView>();
+            RoomView roomView = go.GetComponent<RoomView>();
             if (roomView == null)
                 roomView = go.AddComponent<RoomView>();
 
-            var rt = go.GetComponent<RectTransform>();
+            RectTransform rt = go.GetComponent<RectTransform>();
             rt.anchorMin = new Vector2(0.5f, 0.5f);
             rt.anchorMax = new Vector2(0.5f, 0.5f);
             rt.sizeDelta = new Vector2(_roomSize, _roomSize);
@@ -42,10 +41,10 @@ namespace Features.Dungeon.Infrastructure
 
             if (go.GetComponent<Button>() == null && go.GetComponent<Image>() != null)
             {
-                var button = go.AddComponent<Button>();
+                Button button = go.AddComponent<Button>();
                 button.targetGraphic = go.GetComponent<Image>();
                 button.transition = Selectable.Transition.ColorTint;
-                var colors = button.colors;
+                ColorBlock colors = button.colors;
                 colors.highlightedColor = new Color(1f, 1f, 0.5f, 1f);
                 colors.selectedColor = new Color(1f, 1f, 0f, 1f);
                 button.colors = colors;

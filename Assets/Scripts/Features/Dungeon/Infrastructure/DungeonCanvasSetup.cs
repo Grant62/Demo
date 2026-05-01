@@ -1,4 +1,3 @@
-using Features.Dungeon;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -21,11 +20,11 @@ namespace Features.Dungeon.Infrastructure
             _canvas = GameObject.FindFirstObjectByType<Canvas>();
             if (_canvas == null)
             {
-                var canvasGO = new GameObject("DungeonCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+                GameObject canvasGO = new("DungeonCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
                 _canvas = canvasGO.GetComponent<Canvas>();
                 _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
-                var scaler = _canvas.GetComponent<CanvasScaler>();
+                CanvasScaler scaler = _canvas.GetComponent<CanvasScaler>();
                 scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.referenceResolution = new Vector2(1920, 1080);
             }
@@ -35,31 +34,31 @@ namespace Features.Dungeon.Infrastructure
                 new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
             }
 
-            var rootTransform = CreateOrGetChild(_canvas.transform, DungeonRootName, true);
+            RectTransform rootTransform = CreateOrGetChild(_canvas.transform, DungeonRootName, true);
             LinesContainer = CreateOrGetChild(rootTransform, LinesName, false);
             RoomsContainer = CreateOrGetChild(rootTransform, RoomsName, false);
         }
 
         public void ClearGenerated()
         {
-            var existing = GameObject.FindFirstObjectByType<DungeonRoot>();
+            DungeonRoot existing = GameObject.FindFirstObjectByType<DungeonRoot>();
             if (existing != null)
                 Object.DestroyImmediate(existing.gameObject);
         }
 
         private static RectTransform CreateOrGetChild(Transform parent, string name, bool stretch)
         {
-            var existing = parent.Find(name);
+            Transform existing = parent.Find(name);
             if (existing != null)
                 return existing.GetComponent<RectTransform>();
 
-            var go = new GameObject(name, typeof(RectTransform));
+            GameObject go = new(name, typeof(RectTransform));
             go.transform.SetParent(parent, false);
-            var rt = go.GetComponent<RectTransform>();
+            RectTransform rt = go.GetComponent<RectTransform>();
 
             if (stretch)
             {
-                var root = go.AddComponent<DungeonRoot>();
+                DungeonRoot root = go.AddComponent<DungeonRoot>();
                 rt.anchorMin = Vector2.zero;
                 rt.anchorMax = Vector2.one;
                 rt.offsetMin = Vector2.zero;

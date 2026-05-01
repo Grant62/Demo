@@ -1,27 +1,24 @@
 using JKFrame;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Main.GM
 {
-    [UIWindowDataAttribute(typeof(GmPanelWindow), true, "UI/GMPanel", 4)]
+    [UIWindowDataAttribute(typeof(GmPanelWindow), true, "GMPanel", 4)]
     public class GmPanelWindow : UI_WindowBase
     {
         [SerializeField] private TMP_InputField inputField;
         [SerializeField] private RectTransform commandList;
         [SerializeField] private TMP_Text commandLineTemplate;
 
-        private GmConsoleView _consoleView;
+        public TMP_InputField InputField { get => inputField; }
 
-        public TMP_InputField InputField => inputField;
-
-        public GmConsoleView ConsoleView => _consoleView;
+        public GmConsoleView ConsoleView { get; private set; }
 
         public override void Init()
         {
             base.Init();
-            _consoleView = new GmConsoleView(commandList, commandLineTemplate,
+            ConsoleView = new GmConsoleView(commandList, commandLineTemplate,
                 GmSystem.Ins?.maxCommand ?? 34);
         }
 
@@ -62,17 +59,15 @@ namespace Main.GM
 
         public void AppendCommand(string text)
         {
-            _consoleView?.Append(text);
+            ConsoleView?.Append(text);
         }
 
         public void ClearCommands()
         {
-            _consoleView?.ClearAll();
+            ConsoleView?.ClearAll();
         }
 
-        private void OnInputEndEdit(string input)
-        {
-        }
+        private void OnInputEndEdit(string input) { }
 
         private void OnSubmitCommand(string input)
         {

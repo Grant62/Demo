@@ -16,7 +16,8 @@
    - **Plan**: 1–2 implementation approaches
    - **Change List**: which files need to be modified / created
 2. **任务完成后不要检查文件是否存在语法错误** — Unity Editor auto-detects and flags syntax errors on save. Manually checking is a waste of time.
-3. Follow all naming conventions, code style, and project patterns below.
+3. **不要手动修改预制体 YAML** — 涉及 Unity 编辑器操作（挂脚本、拖引用、标记 Addressable 等），告知用户，由用户在 Unity Editor 中完成。
+4. Follow all naming conventions, code style, and project patterns below.
 
 ---
 

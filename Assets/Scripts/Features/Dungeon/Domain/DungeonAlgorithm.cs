@@ -17,7 +17,7 @@ namespace Features.Dungeon.Domain
 
         public DungeonResult Generate(DungeonSettings settings)
         {
-            var result = TryGenerate(settings);
+            DungeonResult result = TryGenerate(settings);
             if (result != null) return result;
 
             return ForceGenerate(settings);
@@ -27,7 +27,7 @@ namespace Features.Dungeon.Domain
         {
             for (int attempt = 0; attempt < settings.MaxRetries; attempt++)
             {
-                var grid = new bool[settings.GridWidth, settings.GridHeight];
+                bool[,] grid = new bool[settings.GridWidth, settings.GridHeight];
 
                 GridPosition entrance = PickEntrance(settings);
                 GridPosition exit = PickExit(settings, entrance);
@@ -54,7 +54,7 @@ namespace Features.Dungeon.Domain
 
         private DungeonResult ForceGenerate(DungeonSettings settings)
         {
-            var grid = new bool[settings.GridWidth, settings.GridHeight];
+            bool[,] grid = new bool[settings.GridWidth, settings.GridHeight];
             GridPosition entrance = PickEntrance(settings);
             GridPosition exit = PickExit(settings, entrance);
 
@@ -92,8 +92,9 @@ namespace Features.Dungeon.Domain
         {
             int width = settings.GridWidth;
             int height = settings.GridHeight;
-            var visited = new bool[width, height];
-            var path = new List<GridPosition> { entrance };
+            bool[,] visited = new bool[width, height];
+            List<GridPosition> path = new()
+                { entrance };
             visited[entrance.X, entrance.Y] = true;
 
             GridPosition current = entrance;
@@ -101,11 +102,11 @@ namespace Features.Dungeon.Domain
 
             for (int i = 0; i < maxSteps && current != exit; i++)
             {
-                var candidates = GetUnvisitedNeighbors(current, visited, width, height);
+                List<GridPosition> candidates = GetUnvisitedNeighbors(current, visited, width, height);
                 if (candidates.Count == 0) break;
 
                 float totalWeight = 0f;
-                var weights = new float[candidates.Count];
+                float[] weights = new float[candidates.Count];
                 for (int j = 0; j < candidates.Count; j++)
                 {
                     float distBefore = Dist(current, exit);
@@ -121,7 +122,11 @@ namespace Features.Dungeon.Domain
                 for (int j = 0; j < weights.Length; j++)
                 {
                     cumulative += weights[j];
-                    if (r <= cumulative) { chosen = j; break; }
+                    if (r <= cumulative)
+                    {
+                        chosen = j;
+                        break;
+                    }
                 }
 
                 current = candidates[chosen];
@@ -134,7 +139,7 @@ namespace Features.Dungeon.Domain
                 ForceConnectToExit(path, visited, exit, width, height);
             }
 
-            foreach (var pos in path)
+            foreach (GridPosition pos in path)
                 grid[pos.X, pos.Y] = true;
         }
 
@@ -181,20 +186,20 @@ namespace Features.Dungeon.Domain
             int width = settings.GridWidth;
             int height = settings.GridHeight;
 
-            var mainPathRooms = new List<GridPosition>();
+            List<GridPosition> mainPathRooms = new();
             for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++)
-                    if (grid[x, y])
-                        mainPathRooms.Add(new GridPosition(x, y));
+            for (int y = 0; y < height; y++)
+                if (grid[x, y])
+                    mainPathRooms.Add(new GridPosition(x, y));
 
             int branchesAdded = 0;
-            foreach (var room in mainPathRooms)
+            foreach (GridPosition room in mainPathRooms)
             {
                 if (room == entrance || room == exit) continue;
                 if (branchesAdded >= settings.MaxBranchCount) break;
                 if ((float)_rng.NextDouble() > settings.BranchProbability) continue;
 
-                var dirs = new List<GridPosition>(Directions);
+                List<GridPosition> dirs = new(Directions);
                 for (int i = dirs.Count - 1; i >= 0; i--)
                 {
                     GridPosition next = room + dirs[i];
@@ -229,13 +234,13 @@ namespace Features.Dungeon.Domain
             {
                 if (CountRooms(grid) >= settings.MinRoomCount) break;
 
-                var candidates = new List<GridPosition>();
+                List<GridPosition> candidates = new();
                 for (int x = 0; x < width; x++)
                 {
                     for (int y = 0; y < height; y++)
                     {
                         if (!grid[x, y]) continue;
-                        foreach (var dir in Directions)
+                        foreach (GridPosition dir in Directions)
                         {
                             int nx = x + dir.X;
                             int ny = y + dir.Y;
@@ -247,7 +252,7 @@ namespace Features.Dungeon.Domain
 
                 if (candidates.Count == 0) break;
 
-                var chosen = candidates[_rng.Next(candidates.Count)];
+                GridPosition chosen = candidates[_rng.Next(candidates.Count)];
                 grid[chosen.X, chosen.Y] = true;
             }
         }
@@ -257,8 +262,8 @@ namespace Features.Dungeon.Domain
             int width = grid.GetLength(0);
             int height = grid.GetLength(1);
 
-            var rooms = new List<RoomData>();
-            var lines = new List<LineData>();
+            List<RoomData> rooms = new();
+            List<LineData> lines = new();
 
             for (int x = 0; x < width; x++)
             {
@@ -266,7 +271,7 @@ namespace Features.Dungeon.Domain
                 {
                     if (!grid[x, y]) continue;
 
-                    var pos = new GridPosition(x, y);
+                    GridPosition pos = new(x, y);
                     RoomType type = RoomType.Normal;
                     if (pos == entrance) type = RoomType.Entrance;
                     else if (pos == exit) type = RoomType.Exit;
@@ -298,21 +303,23 @@ namespace Features.Dungeon.Domain
             int width = grid.GetLength(0);
             int height = grid.GetLength(1);
             for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++)
-                    if (grid[x, y]) count++;
+            for (int y = 0; y < height; y++)
+                if (grid[x, y])
+                    count++;
             return count;
         }
 
         private static List<GridPosition> GetUnvisitedNeighbors(GridPosition pos, bool[,] visited, int width, int height)
         {
-            var result = new List<GridPosition>();
-            foreach (var dir in Directions)
+            List<GridPosition> result = new();
+            foreach (GridPosition dir in Directions)
             {
                 int nx = pos.X + dir.X;
                 int ny = pos.Y + dir.Y;
                 if (IsInBounds(nx, ny, width, height) && !visited[nx, ny])
                     result.Add(new GridPosition(nx, ny));
             }
+
             return result;
         }
 

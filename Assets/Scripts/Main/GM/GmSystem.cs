@@ -6,9 +6,7 @@ namespace Main.GM
 {
     public class GmSystem : MonoBehaviour, IGmCommandActions
     {
-        private static GmSystem _instance;
-
-        public static GmSystem Ins => _instance;
+        public static GmSystem Ins { get; private set; }
 
         [Header("GM Settings")]
         public int maxHistoryCount = 30;
@@ -26,13 +24,13 @@ namespace Main.GM
 
         private void Awake()
         {
-            if (_instance != null && _instance != this)
+            if (Ins != null && Ins != this)
             {
                 Destroy(gameObject);
                 return;
             }
 
-            _instance = this;
+            Ins = this;
             DontDestroyOnLoad(gameObject);
         }
 
@@ -77,9 +75,7 @@ namespace Main.GM
             return _window;
         }
 
-        protected virtual void OnPopulateCommands()
-        {
-        }
+        protected virtual void OnPopulateCommands() { }
 
         private void RegisterBuiltinCommands()
         {

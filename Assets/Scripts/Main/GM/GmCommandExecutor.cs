@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace Main.GM
 {
     public class GmCommandExecutor

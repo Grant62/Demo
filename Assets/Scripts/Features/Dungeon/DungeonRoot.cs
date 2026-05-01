@@ -1,8 +1,6 @@
+using UnityEngine;
+
 namespace Features.Dungeon
 {
-    using UnityEngine;
-
-    public class DungeonRoot : MonoBehaviour
-    {
-    }
+    public class DungeonRoot : MonoBehaviour { }
 }

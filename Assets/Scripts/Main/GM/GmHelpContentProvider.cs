@@ -9,7 +9,7 @@ namespace Main.GM
             "=== GM Console ===",
             "按 ~ 打开/关闭控制台，↑↓ 浏览历史",
             "help - 显示此帮助信息",
-            "clear - 清空控制台",
+            "clear - 清空控制台"
         };
 
         public void AddHelpLine(string line)

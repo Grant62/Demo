@@ -40,6 +40,7 @@ namespace Features.Dungeon
                     _image.color = Color.gray;
                     break;
             }
+
             _originalColor = _image.color;
         }
 

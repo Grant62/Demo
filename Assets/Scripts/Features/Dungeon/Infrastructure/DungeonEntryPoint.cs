@@ -1,7 +1,6 @@
 using Features.Dungeon.Application;
 using UnityEngine;
 using VContainer;
-using VContainer.Unity;
 
 namespace Features.Dungeon.Infrastructure
 {
