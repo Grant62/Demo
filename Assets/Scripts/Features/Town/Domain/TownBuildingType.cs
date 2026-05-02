@@ -2,9 +2,8 @@ namespace Features.Town.Domain
 {
     public enum TownBuildingType
     {
-        步兵营,
-        行政大厅,
-        教堂,
-        哨兵所
+        战友团,
+        祖宅,
+        游侠箭阁
     }
 }

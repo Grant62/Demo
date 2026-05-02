@@ -15,6 +15,7 @@ namespace Features.Town.UI
     {
         [SerializeField] private TMP_Text _costText;
         [SerializeField] private Button _closeBtn;
+        [SerializeField] private Transform _entriesRoot;
 
         private TownSceneObj _townSceneObj;
         private readonly List<BuildItemComponent> _buildItems = new();
@@ -27,14 +28,21 @@ namespace Features.Town.UI
                 Debug.LogError("场景中未找到 TownSceneObj 组件");
             }
 
+            // 清除上次打开时动态创建的子物体
+            for (int i = _entriesRoot.childCount - 1; i >= 0; i--)
+            {
+                Destroy(_entriesRoot.GetChild(i).gameObject);
+            }
             _buildItems.Clear();
-            _buildItems.AddRange(GetComponentsInChildren<BuildItemComponent>(true));
 
-            for (int i = 0; i < _buildItems.Count && i < TownBuildManager.BuildingConfigs.Length; i++)
+            // 动态加载 BuildItem
+            for (int i = 0; i < TownBuildManager.BuildingConfigs.Length; i++)
             {
                 BuildingConfig config = TownBuildManager.BuildingConfigs[i];
                 TownBuildingType type = config.buildingType;
-                _buildItems[i].Init(config, () => OnBuildClick(type));
+                BuildItemComponent item = ResSystem.InstantiateGameObject<BuildItemComponent>("BuildItem", _entriesRoot);
+                item.Init(config, () => OnBuildClick(type));
+                _buildItems.Add(item);
             }
 
             _closeBtn.onClick.AddListener(OnCloseClick);
@@ -56,7 +64,7 @@ namespace Features.Town.UI
 
         private void RefreshUI()
         {
-            _costText.text = $"空间容量：{TownBuildManager.UsedSpace} / {TownBuildManager.MaxSpace}费";
+            _costText.text = $"蓝图：{TownBuildManager.Blueprints}    空间容量：{TownBuildManager.UsedSpace} / {TownBuildManager.MaxSpace}费";
 
             for (int i = 0; i < _buildItems.Count && i < TownBuildManager.BuildingConfigs.Length; i++)
             {
@@ -64,7 +72,8 @@ namespace Features.Town.UI
                 bool alreadyBuilt = _townSceneObj != null && _townSceneObj.IsBuildingActivated(config.buildingType);
                 bool canAfford = ResourceManager.Gold >= config.goldCost;
                 bool hasSpace = TownBuildManager.UsedSpace + config.spaceCost <= TownBuildManager.MaxSpace;
-                _buildItems[i].SetInteractable(!alreadyBuilt && canAfford && hasSpace);
+                bool hasBlueprint = TownBuildManager.Blueprints > 0;
+                _buildItems[i].SetInteractable(!alreadyBuilt && canAfford && hasSpace && hasBlueprint);
             }
         }
 

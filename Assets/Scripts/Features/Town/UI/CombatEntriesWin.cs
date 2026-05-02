@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using Configuration.ExcelData.DataClass;
+using Configuration.ExcelData.Container;
 using Features.Town.Domain;
 using Features.Town.Infrastructure;
 using JKFrame;
+using Services.ExcelTool;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,18 +21,14 @@ namespace Features.Town.UI
         [SerializeField] private GameObject _resultPrefab;
 
         private TownSceneObj _townSceneObj;
+        private RecruitSaveData _saveData;
         private readonly List<EntryComponent> _entryComponents = new();
         private readonly List<ResultItemComponent> _resultItems = new();
 
-        private static readonly (UnlockSource source, string title)[] AllEntries =
+        private static readonly Dictionary<int, TownBuildingType> BuildingTypeMap = new()
         {
-            (UnlockSource.步兵营, "步兵营"),
-            (UnlockSource.哨兵所, "哨兵所"),
-            (UnlockSource.教堂, "教堂"),
-            (UnlockSource.盗贼工会, "盗贼工会"),
-            (UnlockSource.狂战士营地, "狂战士营地"),
-            (UnlockSource.修道院, "修道院"),
-            (UnlockSource.魔法师协会, "魔法师协会")
+            { 2, TownBuildingType.战友团 },
+            { 3, TownBuildingType.游侠箭阁 }
         };
 
         public override void OnShow()
@@ -41,7 +40,9 @@ namespace Features.Town.UI
             }
 
             _closeBtn.onClick.AddListener(OnCloseClick);
+            LoadSaveData();
             GenerateEntries();
+            RestoreResults();
         }
 
         public override void OnClose()
@@ -51,16 +52,68 @@ namespace Features.Town.UI
             ClearResults();
         }
 
+        private void LoadSaveData()
+        {
+            _saveData = SaveSystem.LoadSetting<RecruitSaveData>("RecruitData");
+            if (_saveData == null)
+            {
+                _saveData = new RecruitSaveData();
+            }
+        }
+
+        private void SaveData()
+        {
+            SaveSystem.SaveSetting(_saveData, "RecruitData");
+        }
+
+        private void RestoreResults()
+        {
+            OccupationInfoContainer container = BinaryDataMgr.Ins.GetTable<OccupationInfoContainer>();
+            if (container == null)
+            {
+                return;
+            }
+
+            foreach (int occupationId in _saveData.occupationIds)
+            {
+                if (container.DataDic.TryGetValue(occupationId, out OccupationInfo info))
+                {
+                    GameObject resultObj = Instantiate(_resultPrefab, _resultsContainer);
+                    ResultItemComponent resultComp = resultObj.GetComponent<ResultItemComponent>();
+                    if (resultComp != null)
+                    {
+                        resultComp.Init(info);
+                        _resultItems.Add(resultComp);
+                    }
+                }
+            }
+        }
+
         private void GenerateEntries()
         {
-            foreach ((UnlockSource source, string title) in AllEntries)
+            ArchitectureInfoContainer container = BinaryDataMgr.Ins.GetTable<ArchitectureInfoContainer>();
+            if (container == null)
             {
-                if (!IsBuildingUnlocked(source))
+                return;
+            }
+
+            foreach (KeyValuePair<int, ArchitectureInfo> pair in container.DataDic)
+            {
+                ArchitectureInfo building = pair.Value;
+
+                if (string.IsNullOrEmpty(building.ResAddress))
                 {
                     continue;
                 }
 
-                if (RecruitService.GetPool(source).Count == 0)
+                if (!BuildingTypeMap.TryGetValue(building.Id, out TownBuildingType buildingType)
+                    || _townSceneObj == null
+                    || !_townSceneObj.IsBuildingActivated(buildingType))
+                {
+                    continue;
+                }
+
+                if (RecruitService.GetOccupations(building.Id, 1).Count == 0)
                 {
                     continue;
                 }
@@ -69,37 +122,22 @@ namespace Features.Town.UI
                 EntryComponent entryComp = entryObj.GetComponent<EntryComponent>();
                 if (entryComp != null)
                 {
-                    entryComp.Init(source, title, _itemPrefab, OnRecruitResult);
+                    entryComp.Init(building.Id, building.Name, building.RecruitmentFee, building.ResAddress, _itemPrefab, OnRecruitResult);
                     _entryComponents.Add(entryComp);
                 }
             }
         }
 
-        private bool IsBuildingUnlocked(UnlockSource source)
+        private void OnRecruitResult(OccupationInfo info)
         {
-            if (_townSceneObj == null)
-            {
-                return false;
-            }
+            _saveData.occupationIds.Add(info.Id);
+            SaveData();
 
-            switch (source)
-            {
-                case UnlockSource.步兵营:
-                    return _townSceneObj.IsBuildingActivated(TownBuildingType.步兵营);
-                case UnlockSource.哨兵所:
-                    return _townSceneObj.IsBuildingActivated(TownBuildingType.哨兵所);
-                default:
-                    return false;
-            }
-        }
-
-        private void OnRecruitResult(RecruitEntry entry)
-        {
             GameObject resultObj = Instantiate(_resultPrefab, _resultsContainer);
             ResultItemComponent resultComp = resultObj.GetComponent<ResultItemComponent>();
             if (resultComp != null)
             {
-                resultComp.Init(entry);
+                resultComp.Init(info);
                 _resultItems.Add(resultComp);
             }
         }

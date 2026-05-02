@@ -1,4 +1,5 @@
-using Features.Town.Domain;
+using Configuration.ExcelData.DataClass;
+using JKFrame;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,16 +9,21 @@ namespace Features.Town.UI
     {
         [SerializeField] private Image _iconImage;
 
-        private RecruitEntry _recruitEntry;
+        private OccupationInfo _occupationInfo;
 
-        public void Init(RecruitEntry entry)
+        public void Init(OccupationInfo info)
         {
-            _recruitEntry = entry;
+            _occupationInfo = info;
+
+            if (_iconImage != null && !string.IsNullOrEmpty(info.ResAddress))
+            {
+                _iconImage.sprite = ResSystem.LoadAsset<Sprite>(info.ResAddress);
+            }
         }
 
-        public RecruitEntry GetEntry()
+        public OccupationInfo GetOccupation()
         {
-            return _recruitEntry;
+            return _occupationInfo;
         }
     }
 }

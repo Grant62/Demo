@@ -7,7 +7,6 @@ namespace Features.Town.Infrastructure
     {
         [SerializeField] private GameObject _infantryCamp;
         [SerializeField] private GameObject _administrativeHall;
-        [SerializeField] private GameObject _church;
         [SerializeField] private GameObject _sentryPost;
 
         public void ActivateBuilding(TownBuildingType type)
@@ -29,13 +28,11 @@ namespace Features.Town.Infrastructure
         {
             switch (type)
             {
-                case TownBuildingType.步兵营:
+                case TownBuildingType.战友团:
                     return _infantryCamp;
-                case TownBuildingType.行政大厅:
+                case TownBuildingType.祖宅:
                     return _administrativeHall;
-                case TownBuildingType.教堂:
-                    return _church;
-                case TownBuildingType.哨兵所:
+                case TownBuildingType.游侠箭阁:
                     return _sentryPost;
                 default:
                     return null;

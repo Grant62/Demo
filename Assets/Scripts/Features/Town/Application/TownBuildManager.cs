@@ -20,26 +20,38 @@ namespace Features.Town.Application
 
         public static int MaxSpace { get => 100; }
 
+        public static int Blueprints { get; private set; } = 3;
+
+        static TownBuildManager()
+        {
+            GameSaveData data = GameSaveData.Load();
+            if (data != null)
+            {
+                Blueprints = data.blueprints;
+                UsedSpace = data.usedSpace;
+            }
+        }
+
         public static BuildingConfig[] BuildingConfigs { get; } =
         {
             new()
             {
-                buildingType = TownBuildingType.行政大厅,
-                displayName = "行政大厅",
+                buildingType = TownBuildingType.祖宅,
+                displayName = "祖宅",
                 goldCost = 1100,
                 spaceCost = 5
             },
             new()
             {
-                buildingType = TownBuildingType.步兵营,
-                displayName = "步兵营",
+                buildingType = TownBuildingType.战友团,
+                displayName = "战友团",
                 goldCost = 1600,
                 spaceCost = 4
             },
             new()
             {
-                buildingType = TownBuildingType.哨兵所,
-                displayName = "哨兵所",
+                buildingType = TownBuildingType.游侠箭阁,
+                displayName = "游侠箭阁",
                 goldCost = 1800,
                 spaceCost = 5
             }
@@ -59,12 +71,28 @@ namespace Features.Town.Application
                 return false;
             }
 
+            if (Blueprints < 1)
+            {
+                Debug.LogWarning("蓝图不足");
+                return false;
+            }
+
             if (!ResourceManager.TrySpendGold(config.goldCost))
             {
                 return false;
             }
 
+            Blueprints -= 1;
             UsedSpace += config.spaceCost;
+
+            GameSaveData saveData = new()
+            {
+                gold = ResourceManager.Gold,
+                blueprints = Blueprints,
+                usedSpace = UsedSpace
+            };
+            saveData.Save();
+
             return true;
         }
     }

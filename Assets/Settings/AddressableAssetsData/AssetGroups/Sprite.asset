@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Sprite
+  m_EditorClassIdentifier: 
+  m_GroupName: Sprite
+  m_Data:
+    m_SerializedData: []
+  m_GUID: f3cb0ae565356aa4b93c66027a46f899
+  m_SerializeEntries:
+  - m_GUID: 2111ed6a1695060419573afbc45044c8
+    m_Address: "\u4EBA\u50CF\u6E38\u4FA0"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c983f107d8e14574a8c47a105c571fc8
+    m_Address: "\u4EBA\u50CF\u67AA\u5175"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d804839d76dc6e54b94feda4ff732545
+    m_Address: "\u62DB\u52DF1"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc3c486ff8e1a174c81a6bb1bdd9c7d7
+    m_Address: "\u62DB\u52DF2"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 74fcbaa473ff1774b899b6f7866c9b7b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7deea10eab1d4514ab8664abe641c6e1, type: 2}
+    - {fileID: 11400000, guid: 94c6b88ccfb67de48addd423de1cf40e, type: 2}

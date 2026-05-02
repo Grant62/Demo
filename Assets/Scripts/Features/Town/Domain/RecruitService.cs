@@ -1,74 +1,71 @@
 using System.Collections.Generic;
+using Configuration.ExcelData.DataClass;
+using Configuration.ExcelData.Container;
+using Services.ExcelTool;
 using UnityEngine;
 
 namespace Features.Town.Domain
 {
     public static class RecruitService
     {
-        private static Dictionary<UnlockSource, List<RecruitEntry>> _pools;
-        private static bool _initialized;
+        private static Dictionary<int, int[]> _buildingOccupationMap;
 
-        private static void EnsurePools()
+        private static void EnsureMapping()
         {
-            if (_initialized)
+            if (_buildingOccupationMap != null)
             {
                 return;
             }
 
-            _pools = new Dictionary<UnlockSource, List<RecruitEntry>>();
-
-            _pools[UnlockSource.步兵营] = new List<RecruitEntry>
+            _buildingOccupationMap = new Dictionary<int, int[]>
             {
-                new(
-                    "枪兵",
-                    "攻击面前所有怪物，造成3点伤害",
-                    1,
-                    RecruitCategory.兵种,
-                    UnlockSource.步兵营
-                )
+                { 2, new[] { 1, 2, 3, 4 } },
+                { 3, new[] { 5, 6 } }
             };
-
-            _pools[UnlockSource.哨兵所] = new List<RecruitEntry>
-            {
-                new(
-                    "人类射手",
-                    "攻击目标单体，造成4点伤害，该目标每受到1次伤害，额外+2伤害",
-                    1,
-                    RecruitCategory.兵种,
-                    UnlockSource.哨兵所
-                )
-            };
-
-            _pools[UnlockSource.教堂] = new List<RecruitEntry>();
-            _pools[UnlockSource.盗贼工会] = new List<RecruitEntry>();
-            _pools[UnlockSource.狂战士营地] = new List<RecruitEntry>();
-            _pools[UnlockSource.修道院] = new List<RecruitEntry>();
-            _pools[UnlockSource.魔法师协会] = new List<RecruitEntry>();
-
-            _initialized = true;
         }
 
-        public static List<RecruitEntry> GetPool(UnlockSource source)
+        private static OccupationInfoContainer GetContainer()
         {
-            EnsurePools();
-            if (_pools.TryGetValue(source, out List<RecruitEntry> pool))
+            return BinaryDataMgr.Ins.GetTable<OccupationInfoContainer>();
+        }
+
+        public static List<OccupationInfo> GetOccupations(int buildingId, int level)
+        {
+            EnsureMapping();
+            OccupationInfoContainer container = GetContainer();
+            if (container == null)
             {
-                return pool;
+                return new List<OccupationInfo>();
             }
 
-            return new List<RecruitEntry>();
+            if (!_buildingOccupationMap.TryGetValue(buildingId, out int[] occupationIds))
+            {
+                return new List<OccupationInfo>();
+            }
+
+            int count = Mathf.Min(level, occupationIds.Length);
+            List<OccupationInfo> result = new();
+            for (int i = 0; i < count; i++)
+            {
+                if (container.DataDic.TryGetValue(occupationIds[i], out OccupationInfo info))
+                {
+                    result.Add(info);
+                }
+            }
+
+            return result;
         }
 
-        public static RecruitEntry DrawFrom(UnlockSource source)
+        public static OccupationInfo DrawFrom(int buildingId, int level)
         {
-            EnsurePools();
-            if (!_pools.TryGetValue(source, out List<RecruitEntry> pool) || pool.Count == 0)
+            List<OccupationInfo> available = GetOccupations(buildingId, level);
+            if (available.Count == 0)
             {
-                Debug.LogWarning($"招募池 {source} 为空");
+                Debug.LogWarning($"招募池为空 buildingId={buildingId}, level={level}");
                 return null;
             }
 
-            return pool[Random.Range(0, pool.Count)];
+            return available[Random.Range(0, available.Count)];
         }
     }
 }
