@@ -11,11 +11,20 @@ namespace Main.Resource
 
         public void Save()
         {
+            if (SaveSystem.GetSaveItem(0) == null)
+            {
+                SaveSystem.CreateSaveItem();
+            }
             SaveSystem.SaveObject(this);
         }
 
         public static GameSaveData Load()
         {
+            SaveItem saveItem = SaveSystem.GetSaveItem(0);
+            if (saveItem == null)
+            {
+                return new GameSaveData();
+            }
             return SaveSystem.LoadObject<GameSaveData>();
         }
 
