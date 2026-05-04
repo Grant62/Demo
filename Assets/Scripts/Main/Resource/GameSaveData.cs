@@ -1,8 +1,9 @@
+using System;
 using JKFrame;
 
 namespace Main.Resource
 {
-    [System.Serializable]
+    [Serializable]
     public class GameSaveData
     {
         public int gold = 5000;
@@ -15,6 +16,7 @@ namespace Main.Resource
             {
                 SaveSystem.CreateSaveItem();
             }
+
             SaveSystem.SaveObject(this);
         }
 
@@ -25,6 +27,7 @@ namespace Main.Resource
             {
                 return new GameSaveData();
             }
+
             return SaveSystem.LoadObject<GameSaveData>();
         }
 

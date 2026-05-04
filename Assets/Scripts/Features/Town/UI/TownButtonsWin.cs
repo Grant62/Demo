@@ -1,4 +1,3 @@
-using Features.Bag.UI;
 using JKFrame;
 using Main.UI;
 using UnityEngine;
@@ -12,7 +11,6 @@ namespace Features.Town.UI
         [SerializeField] private Button _battleBtn;
         [SerializeField] private Button _departBtn;
         [SerializeField] private Button _buildBtn;
-        [SerializeField] private Button _bagBtn;
 
         public override void OnShow()
         {
@@ -20,7 +18,6 @@ namespace Features.Town.UI
             _battleBtn.onClick.AddListener(OnBattleClick);
             _departBtn.onClick.AddListener(OnDepartClick);
             _buildBtn.onClick.AddListener(OnBuildClick);
-            _bagBtn.onClick.AddListener(OnBagClick);
         }
 
         public override void OnClose()
@@ -28,7 +25,6 @@ namespace Features.Town.UI
             _battleBtn.onClick.RemoveAllListeners();
             _departBtn.onClick.RemoveAllListeners();
             _buildBtn.onClick.RemoveAllListeners();
-            _bagBtn.onClick.RemoveAllListeners();
         }
 
         private void OnBattleClick()
@@ -45,11 +41,6 @@ namespace Features.Town.UI
         private void OnBuildClick()
         {
             UISystem.Show<TownBuildWin>();
-        }
-
-        private void OnBagClick()
-        {
-            UISystem.Show<BagPanelWin>();
         }
     }
 }

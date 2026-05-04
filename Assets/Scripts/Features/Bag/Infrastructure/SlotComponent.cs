@@ -11,7 +11,8 @@ namespace Features.Bag.Infrastructure
         [SerializeField] private Image _iconImage;
         [SerializeField] private Image _qualityFrameImage;
 
-        public EquipmentSlotType SlotType => _slotType;
+        public EquipmentSlotType SlotType { get => _slotType; }
+
         public BagItemData CurrentItem { get; private set; }
         public Image BackgroundImage { get; private set; }
 
@@ -36,11 +37,13 @@ namespace Features.Bag.Infrastructure
                     _iconImage.sprite = null;
                     _iconImage.enabled = false;
                 }
+
                 if (_qualityFrameImage != null)
                 {
                     _qualityFrameImage.sprite = null;
                     _qualityFrameImage.enabled = false;
                 }
+
                 return;
             }
 
@@ -49,6 +52,7 @@ namespace Features.Bag.Infrastructure
                 _iconImage.sprite = iconSprite;
                 _iconImage.enabled = true;
             }
+
             if (_qualityFrameImage != null)
             {
                 _qualityFrameImage.sprite = qualityFrameSprite;

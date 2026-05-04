@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Features.Bag.Application;
 using Features.Bag.Domain;
@@ -6,6 +7,7 @@ using JKFrame;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using EventSystem = JKFrame.EventSystem;
 
 namespace Features.Bag.UI
 {
@@ -28,7 +30,7 @@ namespace Features.Bag.UI
             { ItemQuality.None, "BGempty" },
             { ItemQuality.Green, "BGgreen" },
             { ItemQuality.Orange, "BGorange" },
-            { ItemQuality.Purple, "BGpurple" },
+            { ItemQuality.Purple, "BGpurple" }
         };
 
         public override void OnShow()
@@ -40,45 +42,14 @@ namespace Features.Bag.UI
             SetupBagItems();
             RegisterDragEvents();
 
-            AddTestData();
-
-            JKFrame.EventSystem.AddEventListener("BagChanged", UpdateAllDisplay);
+            EventSystem.AddEventListener("BagChanged", UpdateAllDisplay);
             UpdateAllDisplay();
-        }
-
-        private void AddTestData()
-        {
-            _bagService.AddItem(new BagItemData
-            {
-                id = 1, itemName = "铁剑", iconAddress = null, qualityFrameAddress = "BGgreen",
-                quality = ItemQuality.Green, count = 1, slotType = EquipmentSlotType.Weapon,
-            });
-            _bagService.AddItem(new BagItemData
-            {
-                id = 2, itemName = "钢盔", iconAddress = null, qualityFrameAddress = "BGorange",
-                quality = ItemQuality.Orange, count = 1, slotType = EquipmentSlotType.Helmet,
-            });
-            _bagService.AddItem(new BagItemData
-            {
-                id = 3, itemName = "龙鳞甲", iconAddress = null, qualityFrameAddress = "BGpurple",
-                quality = ItemQuality.Purple, count = 1, slotType = EquipmentSlotType.Armor,
-            });
-            _bagService.AddItem(new BagItemData
-            {
-                id = 4, itemName = "钻戒", iconAddress = null, qualityFrameAddress = "BGgreen",
-                quality = ItemQuality.Green, count = 3, slotType = EquipmentSlotType.Ring,
-            });
-            _bagService.AddItem(new BagItemData
-            {
-                id = 5, itemName = "铁靴", iconAddress = null, qualityFrameAddress = "BGempty",
-                quality = ItemQuality.None, count = 2, slotType = EquipmentSlotType.Boots,
-            });
         }
 
         public override void OnClose()
         {
             CleanupDragEvents();
-            JKFrame.EventSystem.RemoveEventListener("BagChanged", UpdateAllDisplay);
+            EventSystem.RemoveEventListener("BagChanged", UpdateAllDisplay);
             _closeBtn.onClick.RemoveListener(OnCloseClick);
 
             if (_currentGhost != null)
@@ -95,7 +66,7 @@ namespace Features.Bag.UI
 
         private void SetupSlots()
         {
-            EquipmentSlotType[] types = (EquipmentSlotType[])System.Enum.GetValues(typeof(EquipmentSlotType));
+            EquipmentSlotType[] types = (EquipmentSlotType[])Enum.GetValues(typeof(EquipmentSlotType));
             for (int i = 0; i < _equipmentSlots.Length && i < types.Length; i++)
             {
                 _equipmentSlots[i].Setup(types[i]);
@@ -115,19 +86,19 @@ namespace Features.Bag.UI
             for (int i = 0; i < _equipmentSlots.Length; i++)
             {
                 SlotComponent slot = _equipmentSlots[i];
-                slot.OnBeginDrag<SlotComponent>(OnSlotBeginDrag, slot);
-                slot.OnDrag<SlotComponent>(OnSlotDrag, slot);
-                slot.OnEndDrag<SlotComponent>(OnSlotEndDrag, slot);
-                slot.OnClick<SlotComponent>(OnSlotClick, slot);
+                slot.OnBeginDrag(OnSlotBeginDrag, slot);
+                slot.OnDrag(OnSlotDrag, slot);
+                slot.OnEndDrag(OnSlotEndDrag, slot);
+                slot.OnClick(OnSlotClick, slot);
             }
 
             for (int i = 0; i < _bagItemSlots.Length; i++)
             {
                 ItemComponent item = _bagItemSlots[i];
-                item.OnBeginDrag<ItemComponent>(OnItemBeginDrag, item);
-                item.OnDrag<ItemComponent>(OnItemDrag, item);
-                item.OnEndDrag<ItemComponent>(OnItemEndDrag, item);
-                item.OnClick<ItemComponent>(OnItemClick, item);
+                item.OnBeginDrag(OnItemBeginDrag, item);
+                item.OnDrag(OnItemDrag, item);
+                item.OnEndDrag(OnItemEndDrag, item);
+                item.OnClick(OnItemClick, item);
             }
         }
 
@@ -328,6 +299,7 @@ namespace Features.Bag.UI
             {
                 _equipmentSlots[i].SetHighlight(false);
             }
+
             for (int i = 0; i < _bagItemSlots.Length; i++)
             {
                 _bagItemSlots[i].SetHighlight(false);
@@ -336,7 +308,7 @@ namespace Features.Bag.UI
 
         private T FindDropTarget<T>(PointerEventData eventData) where T : Component
         {
-            List<RaycastResult> results = new List<RaycastResult>();
+            List<RaycastResult> results = new();
             UnityEngine.EventSystems.EventSystem.current.RaycastAll(eventData, results);
 
             for (int i = 0; i < results.Count; i++)

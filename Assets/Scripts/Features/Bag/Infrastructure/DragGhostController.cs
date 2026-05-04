@@ -24,6 +24,7 @@ namespace Features.Bag.Infrastructure
                 _ghostIcon.sprite = iconSprite;
                 _ghostIcon.enabled = iconSprite != null;
             }
+
             if (_ghostQualityFrame != null)
             {
                 _ghostQualityFrame.sprite = qualityFrameSprite;

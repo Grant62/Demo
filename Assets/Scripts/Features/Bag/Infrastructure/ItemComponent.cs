@@ -37,15 +37,18 @@ namespace Features.Bag.Infrastructure
                     _iconImage.sprite = null;
                     _iconImage.enabled = false;
                 }
+
                 if (_qualityFrameImage != null)
                 {
                     _qualityFrameImage.sprite = null;
                     _qualityFrameImage.enabled = false;
                 }
+
                 if (_countText != null)
                 {
                     _countText.text = string.Empty;
                 }
+
                 return;
             }
 
@@ -54,11 +57,13 @@ namespace Features.Bag.Infrastructure
                 _iconImage.sprite = iconSprite;
                 _iconImage.enabled = true;
             }
+
             if (_qualityFrameImage != null)
             {
                 _qualityFrameImage.sprite = qualityFrameSprite;
                 _qualityFrameImage.enabled = true;
             }
+
             if (_countText != null)
             {
                 _countText.text = item.count > 1 ? $"x{item.count}" : string.Empty;

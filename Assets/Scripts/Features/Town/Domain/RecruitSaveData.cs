@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace Features.Town.Domain
 {
-    [System.Serializable]
+    [Serializable]
     public class RecruitSaveData
     {
         public List<int> occupationIds = new();

@@ -9,8 +9,9 @@ namespace Features.Bag.Application
     {
         private readonly BagState _state;
 
-        public IReadOnlyList<BagItemData> BagItems => _state.bagItems;
-        public IReadOnlyDictionary<EquipmentSlotType, BagItemData> Equipped => _state.equipped;
+        public IReadOnlyList<BagItemData> BagItems { get => _state.bagItems; }
+
+        public IReadOnlyDictionary<EquipmentSlotType, BagItemData> Equipped { get => _state.equipped; }
 
         public BagService()
         {
@@ -44,7 +45,7 @@ namespace Features.Bag.Application
             }
 
             RemoveItem(bagIndex, 1);
-            BagItemData equippedItem = new BagItemData
+            BagItemData equippedItem = new()
             {
                 id = item.id,
                 itemName = item.itemName,
@@ -103,7 +104,7 @@ namespace Features.Bag.Application
             {
                 if (_state.bagItems[i] == null)
                 {
-                    BagItemData newItem = new BagItemData
+                    BagItemData newItem = new()
                     {
                         id = item.id,
                         itemName = item.itemName,
@@ -147,6 +148,7 @@ namespace Features.Bag.Application
             {
                 Unequip(targetSlot);
             }
+
             _state.equipped[targetSlot] = sourceItem;
 
             EventSystem.EventTrigger("BagChanged");

@@ -1,0 +1,684 @@
+using Features.CrawlerMap.Domain;
+using UnityEditor;
+using UnityEngine;
+
+namespace Features.CrawlerMap.Editor
+{
+    public class CrawlerMapEditorWindow : EditorWindow
+    {
+        private CrawlerMapEditorState S;
+
+        private const float BaseCellSize = 36f;
+
+        private static readonly Color ColorEmptyA = new(0.18f, 0.18f, 0.20f, 0.35f);
+        private static readonly Color ColorEmptyB = new(0.22f, 0.22f, 0.24f, 0.35f);
+        private static readonly Color ColorWall = new(0f, 0f, 0f);
+        private static readonly Color ColorSpace = new(0.85f, 0.85f, 0.85f);
+        private static readonly Color ColorEvent = new(0.30f, 0.55f, 1.00f);
+        private static readonly Color ColorItem = new(0.30f, 0.90f, 0.35f);
+        private static readonly Color ColorEnemy = new(0.95f, 0.30f, 0.30f);
+        private static readonly Color ColorGridLine = new(0.40f, 0.40f, 0.40f, 0.50f);
+        private static readonly Color ColorBlockPreview = new(1f, 1f, 0f, 0.25f);
+        private static readonly Color ColorSelOutline = new(1f, 1f, 0f, 0.80f);
+
+        private static readonly Color ColorBrushSpace = new(0.75f, 0.75f, 0.75f);
+        private static readonly Color ColorBrushWall = new(0f, 0f, 0f);
+        private static readonly Color ColorBrushErase = new(0.50f, 0.25f, 0.05f);
+        private static readonly Color ColorBrushEvent = new(0.30f, 0.55f, 1.00f);
+        private static readonly Color ColorBrushItem = new(0.30f, 0.90f, 0.35f);
+        private static readonly Color ColorBrushEnemy = new(0.95f, 0.30f, 0.30f);
+
+        private float CellSize { get => BaseCellSize * S.Zoom; }
+
+        [MenuItem("游戏工具/爬行者地图编辑器")]
+        private static void Open()
+        {
+            CrawlerMapEditorWindow window = GetWindow<CrawlerMapEditorWindow>("Crawler Map");
+            window.minSize = new Vector2(600, 450);
+            window.S = new CrawlerMapEditorState();
+            window.Show();
+        }
+
+        private void OnEnable()
+        {
+            S ??= new CrawlerMapEditorState();
+        }
+
+        private void OnGUI()
+        {
+            DrawToolbar();
+            DrawGeneratePanel();
+
+            if (S.Data == null)
+            {
+                EditorGUILayout.Space(4);
+                EditorGUILayout.HelpBox("请先创建或加载一个 CrawlerMapData 资产 (点击顶部 New / Load)", MessageType.Info);
+                return;
+            }
+
+            EditorGUILayout.Space(4);
+
+            Rect gridRect = GUILayoutUtility.GetRect(0, 0, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+            DrawGridArea(gridRect);
+            DrawInspector();
+        }
+
+        private void DrawToolbar()
+        {
+            Row1Toolbar();
+            Row2Toolbar();
+        }
+
+        private void Row1Toolbar()
+        {
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+
+            if (GUILayout.Button("New", EditorStyles.toolbarButton, GUILayout.Width(40)))
+            {
+                CreateNewMap();
+            }
+
+            if (GUILayout.Button("Save", EditorStyles.toolbarButton, GUILayout.Width(40)))
+            {
+                SaveMap();
+            }
+
+            if (GUILayout.Button("Load", EditorStyles.toolbarButton, GUILayout.Width(40)))
+            {
+                LoadMap();
+            }
+
+            if (GUILayout.Button("Generate", EditorStyles.toolbarButton, GUILayout.Width(56)))
+            {
+                S.ShowGenSettings = !S.ShowGenSettings;
+            }
+
+            if (GUILayout.Button("Clear", EditorStyles.toolbarButton, GUILayout.Width(40)))
+            {
+                if (EditorUtility.DisplayDialog("Clear All", "确认清除所有格子?", "Yes", "No"))
+                {
+                    S.Data.ClearAll();
+                    EditorUtility.SetDirty(S.Data);
+                }
+            }
+
+            GUILayout.FlexibleSpace();
+
+            GUILayout.Label($"缩放 {S.Zoom * 100:F0}%", EditorStyles.miniLabel);
+            S.Zoom = GUILayout.HorizontalSlider(S.Zoom, 0.3f, 3f, GUILayout.Width(80));
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void Row2Toolbar()
+        {
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+
+            DrawBrushButton(CellContentType.Space, ColorBrushSpace);
+            DrawBrushButton(CellContentType.Wall, ColorBrushWall);
+            DrawBrushButton(CellContentType.Eraser, ColorBrushErase);
+            DrawBrushButton(CellContentType.Event, ColorBrushEvent);
+            DrawBrushButton(CellContentType.Item, ColorBrushItem);
+            DrawBrushButton(CellContentType.Enemy, ColorBrushEnemy);
+
+            GUILayout.Space(6);
+
+            DrawBlockToolbarButton(1, 1, "1x1");
+            DrawBlockToolbarButton(2, 2, "2x2");
+            DrawBlockToolbarButton(3, 3, "3x3");
+            DrawBlockToolbarButton(2, 3, "2x3");
+            DrawBlockToolbarButton(3, 2, "3x2");
+
+            GUILayout.FlexibleSpace();
+
+            string info = S.Data != null ? $"{S.Data.Width}x{S.Data.Height}" : "";
+            GUILayout.Label(info, EditorStyles.miniLabel);
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawBrushButton(CellContentType type, Color swatchColor)
+        {
+            bool isActive = S.Brush == type && S.BlockW == 1;
+            string label = type switch
+            {
+                CellContentType.Space => "Space",
+                CellContentType.Wall => "Wall",
+                CellContentType.Eraser => "Erase",
+                CellContentType.Event => "Event",
+                CellContentType.Item => "Item",
+                CellContentType.Enemy => "Enemy",
+                _ => "?"
+            };
+
+            Color oldColor = GUI.color;
+            if (isActive)
+            {
+                GUI.color = new Color(0.6f, 0.8f, 1f);
+            }
+
+            if (GUILayout.Button($"  {label}", EditorStyles.toolbarButton, GUILayout.Width(56)))
+            {
+                S.Brush = type;
+                S.BlockW = 1;
+                S.BlockH = 1;
+            }
+
+            // Draw color swatch using the last button rect
+            if (Event.current.type == EventType.Repaint)
+            {
+                Rect lastRect = GUILayoutUtility.GetLastRect();
+                Rect swatch = new(lastRect.x + 3, lastRect.y + 3, 12, 12);
+                EditorGUI.DrawRect(swatch, swatchColor);
+                if (isActive)
+                {
+                    EditorGUI.DrawRect(new Rect(swatch.x - 1, swatch.y - 1, 14, 14), new Color(1f, 1f, 0f, 0.6f));
+                }
+            }
+
+            GUI.color = oldColor;
+        }
+
+        private void DrawBlockToolbarButton(int w, int h, string label)
+        {
+            bool isActive = S.BlockW == w && S.BlockH == h && S.Brush == CellContentType.Space;
+
+            Color old = GUI.color;
+            if (isActive)
+            {
+                GUI.color = new Color(0.6f, 0.8f, 1f);
+            }
+
+            if (GUILayout.Button(label, EditorStyles.toolbarButton, GUILayout.Width(34)))
+            {
+                S.Brush = CellContentType.Space;
+                S.BlockW = w;
+                S.BlockH = h;
+            }
+
+            GUI.color = old;
+        }
+
+        private void DrawGeneratePanel()
+        {
+            if (!S.ShowGenSettings)
+            {
+                return;
+            }
+
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            EditorGUILayout.LabelField("地图生成", EditorStyles.boldLabel);
+
+            S.GenSettings.seed = EditorGUILayout.IntField("种子 (0=随机)", S.GenSettings.seed);
+            S.GenSettings.blockCount = EditorGUILayout.IntSlider("空间块数量", S.GenSettings.blockCount, 1, 50);
+
+            float minW = S.GenSettings.minWidth;
+            float maxW = S.GenSettings.maxWidth;
+            EditorGUILayout.MinMaxSlider(
+                $"宽度 [{S.GenSettings.minWidth}, {S.GenSettings.maxWidth}]",
+                ref minW, ref maxW, 1f, 8f
+            );
+            S.GenSettings.minWidth = Mathf.RoundToInt(minW);
+            S.GenSettings.maxWidth = Mathf.RoundToInt(maxW);
+
+            float minH = S.GenSettings.minHeight;
+            float maxH = S.GenSettings.maxHeight;
+            EditorGUILayout.MinMaxSlider(
+                $"高度 [{S.GenSettings.minHeight}, {S.GenSettings.maxHeight}]",
+                ref minH, ref maxH, 1f, 8f
+            );
+            S.GenSettings.minHeight = Mathf.RoundToInt(minH);
+            S.GenSettings.maxHeight = Mathf.RoundToInt(maxH);
+
+            S.GenSettings.margin = EditorGUILayout.IntSlider("块间距", S.GenSettings.margin, 0, 3);
+            S.GenSettings.fillWalls = EditorGUILayout.Toggle("剩余区域填充墙壁", S.GenSettings.fillWalls);
+
+            EditorGUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("生成", GUILayout.Height(26)))
+            {
+                if (S.Data == null)
+                {
+                    EditorUtility.DisplayDialog("提示", "请先 New 或 Load 一个地图资产", "OK");
+                }
+                else
+                {
+                    MapGenerator.Generate(S.Data, S.GenSettings);
+                    EditorUtility.SetDirty(S.Data);
+                    S.ShowGenSettings = false;
+                }
+            }
+
+            if (GUILayout.Button("关闭", GUILayout.Height(26)))
+            {
+                S.ShowGenSettings = false;
+            }
+
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
+        }
+
+        private void DrawGridArea(Rect rect)
+        {
+            if (S.Data == null || rect.width < 10 || rect.height < 10)
+            {
+                return;
+            }
+
+            Event e = Event.current;
+            Vector2 mousePos = e.mousePosition;
+            bool mouseInRect = rect.Contains(mousePos);
+
+            int hoverX = -1, hoverY = -1;
+            if (mouseInRect)
+            {
+                MouseToCell(mousePos, rect, out hoverX, out hoverY);
+            }
+
+            switch (e.type)
+            {
+                case EventType.MouseDown:
+                    if (mouseInRect)
+                    {
+                        if (e.button == 0)
+                        {
+                            PaintCell(hoverX, hoverY);
+                            e.Use();
+                        }
+                        else if (e.button == 2)
+                        {
+                            S.IsPanning = true;
+                            S.PanStartMouse = mousePos;
+                            S.PanStartOffset = S.PanOffset;
+                            e.Use();
+                        }
+                    }
+
+                    break;
+
+                case EventType.MouseDrag:
+                    if (mouseInRect)
+                    {
+                        if (S.IsPanning)
+                        {
+                            Vector2 delta = (mousePos - S.PanStartMouse) / CellSize;
+                            S.PanOffset = S.PanStartOffset + new Vector2(delta.x, -delta.y);
+                            e.Use();
+                        }
+                        else if (e.button == 0)
+                        {
+                            PaintCell(hoverX, hoverY);
+                            e.Use();
+                        }
+                    }
+
+                    break;
+
+                case EventType.MouseUp:
+                    if (e.button == 2)
+                    {
+                        S.IsPanning = false;
+                        e.Use();
+                    }
+                    else if (e.button == 1 && mouseInRect)
+                    {
+                        if (hoverX >= 0 && hoverY >= 0
+                                        && hoverX < S.Data.Width && hoverY < S.Data.Height)
+                        {
+                            S.SelectCell(hoverX, hoverY);
+                        }
+
+                        e.Use();
+                    }
+
+                    break;
+
+                case EventType.ScrollWheel:
+                    if (mouseInRect)
+                    {
+                        float delta = -e.delta.y * 0.02f;
+                        float oldZoom = S.Zoom;
+                        S.Zoom = Mathf.Clamp(S.Zoom + delta, 0.3f, 3f);
+                        float factor = S.Zoom / oldZoom;
+                        Vector2 mouseToCenter = mousePos - rect.center;
+                        S.PanOffset = S.PanOffset * factor
+                                      - mouseToCenter / (CellSize * oldZoom) * (factor - 1f) * oldZoom;
+                        e.Use();
+                    }
+
+                    break;
+
+                case EventType.KeyDown:
+                    if (S.ShowInspector && (e.keyCode == KeyCode.Escape || e.keyCode == KeyCode.Return))
+                    {
+                        S.ClearSelection();
+                        e.Use();
+                    }
+
+                    break;
+            }
+
+            if (e.type == EventType.Repaint)
+            {
+                DrawGridContent(rect, hoverX, hoverY);
+            }
+        }
+
+        private void DrawGridContent(Rect rect, int hoverX, int hoverY)
+        {
+            float cs = CellSize;
+            Vector2 origin = new(
+                rect.center.x + S.PanOffset.x * cs - S.Data.Width * cs * 0.5f - rect.x,
+                rect.center.y - S.PanOffset.y * cs - S.Data.Height * cs * 0.5f - rect.y
+            );
+
+            GUI.BeginGroup(rect);
+
+            for (int y = 0; y < S.Data.Height; y++)
+            {
+                for (int x = 0; x < S.Data.Width; x++)
+                {
+                    Rect cellRect = new(
+                        origin.x + x * cs,
+                        origin.y + y * cs,
+                        cs, cs
+                    );
+
+                    if (!cellRect.Overlaps(new Rect(0, 0, rect.width, rect.height)))
+                    {
+                        continue;
+                    }
+
+                    CellData cell = S.Data.GetCell(x, y);
+                    Color color = GetCellColor(cell, x, y);
+                    EditorGUI.DrawRect(cellRect, color);
+                }
+            }
+
+            for (int x = 0; x <= S.Data.Width; x++)
+            {
+                float px = origin.x + x * cs;
+                EditorGUI.DrawRect(new Rect(px, origin.y, 1, S.Data.Height * cs), ColorGridLine);
+            }
+
+            for (int y = 0; y <= S.Data.Height; y++)
+            {
+                float py = origin.y + y * cs;
+                EditorGUI.DrawRect(new Rect(origin.x, py, S.Data.Width * cs, 1), ColorGridLine);
+            }
+
+            if (hoverX >= 0 && hoverY >= 0)
+            {
+                Rect previewRect = new(
+                    origin.x + hoverX * cs,
+                    origin.y + hoverY * cs,
+                    S.BlockW * cs,
+                    S.BlockH * cs
+                );
+                EditorGUI.DrawRect(previewRect, ColorBlockPreview);
+                EditorGUI.DrawRect(new Rect(previewRect.x, previewRect.y, previewRect.width, 1), ColorSelOutline);
+                EditorGUI.DrawRect(new Rect(previewRect.x, previewRect.y + previewRect.height - 1, previewRect.width, 1), ColorSelOutline);
+                EditorGUI.DrawRect(new Rect(previewRect.x, previewRect.y, 1, previewRect.height), ColorSelOutline);
+                EditorGUI.DrawRect(new Rect(previewRect.x + previewRect.width - 1, previewRect.y, 1, previewRect.height), ColorSelOutline);
+            }
+
+            if (S.ShowInspector && S.SelX >= 0 && S.SelY >= 0)
+            {
+                Rect selRect = new(
+                    origin.x + S.SelX * cs,
+                    origin.y + S.SelY * cs,
+                    cs, cs
+                );
+                for (int i = 0; i < 2; i++)
+                {
+                    EditorGUI.DrawRect(new Rect(selRect.x - i, selRect.y - i, selRect.width + i * 2, 1), ColorSelOutline);
+                    EditorGUI.DrawRect(new Rect(selRect.x - i, selRect.y + selRect.height - 1 + i, selRect.width + i * 2, 1), ColorSelOutline);
+                    EditorGUI.DrawRect(new Rect(selRect.x - i, selRect.y - i, 1, selRect.height + i * 2), ColorSelOutline);
+                    EditorGUI.DrawRect(new Rect(selRect.x + selRect.width - 1 + i, selRect.y - i, 1, selRect.height + i * 2), ColorSelOutline);
+                }
+            }
+
+            GUI.EndGroup();
+        }
+
+        private void PaintCell(int x, int y)
+        {
+            if (S.Data == null || x < 0 || y < 0 || x >= S.Data.Width || y >= S.Data.Height)
+            {
+                return;
+            }
+
+            if (S.Brush == CellContentType.Eraser)
+            {
+                for (int bx = 0; bx < S.BlockW; bx++)
+                {
+                    for (int by = 0; by < S.BlockH; by++)
+                    {
+                        CellData cell = S.Data.GetCell(x + bx, y + by);
+                        if (cell != null)
+                        {
+                            cell.ContentType = CellContentType.Empty;
+                            cell.ContentId = 0;
+                            cell.ContentName = string.Empty;
+                        }
+                    }
+                }
+
+                EditorUtility.SetDirty(S.Data);
+                return;
+            }
+
+            if (S.Brush == CellContentType.Space && (S.BlockW > 1 || S.BlockH > 1))
+            {
+                RoomBlock block = new()
+                {
+                    Name = $"Block_{x}_{y}",
+                    OriginX = x,
+                    OriginY = y,
+                    Width = S.BlockW,
+                    Height = S.BlockH
+                };
+                S.Data.ApplyBlock(block);
+                EditorUtility.SetDirty(S.Data);
+                return;
+            }
+
+            CellData target = S.Data.GetCell(x, y);
+            if (target != null)
+            {
+                target.ContentType = S.Brush;
+                if (S.Brush == CellContentType.Space)
+                {
+                    target.ContentId = 0;
+                    target.ContentName = string.Empty;
+                }
+
+                EditorUtility.SetDirty(S.Data);
+            }
+        }
+
+        private void MouseToCell(Vector2 mousePos, Rect rect, out int x, out int y)
+        {
+            float cs = CellSize;
+            Vector2 origin = new(
+                rect.center.x + S.PanOffset.x * cs - S.Data.Width * cs * 0.5f,
+                rect.center.y - S.PanOffset.y * cs - S.Data.Height * cs * 0.5f
+            );
+            float gx = (mousePos.x - origin.x) / cs;
+            float gy = (mousePos.y - origin.y) / cs;
+            x = Mathf.FloorToInt(gx);
+            y = Mathf.FloorToInt(gy);
+        }
+
+        private Color GetCellColor(CellData cell, int gridX, int gridY)
+        {
+            if (cell == null)
+            {
+                return ColorEmptyA;
+            }
+
+            switch (cell.ContentType)
+            {
+                case CellContentType.Empty:
+                    return (gridX + gridY) % 2 == 0 ? ColorEmptyA : ColorEmptyB;
+                case CellContentType.Wall:
+                    return ColorWall;
+                case CellContentType.Space:
+                    return ColorSpace;
+                case CellContentType.Event:
+                    return ColorEvent;
+                case CellContentType.Item:
+                    return ColorItem;
+                case CellContentType.Enemy:
+                    return ColorEnemy;
+                default:
+                    return ColorEmptyA;
+            }
+        }
+
+        private void DrawInspector()
+        {
+            if (!S.ShowInspector || S.Data == null)
+            {
+                return;
+            }
+
+            CellData cell = S.Data.GetCell(S.SelX, S.SelY);
+            if (cell == null)
+            {
+                S.ClearSelection();
+                return;
+            }
+
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            EditorGUILayout.LabelField($"单元格 ({S.SelX}, {S.SelY})", EditorStyles.boldLabel);
+
+            string contentLabel = GetContentLabel(cell.ContentType);
+            using (new EditorGUI.DisabledGroupScope(true))
+            {
+                EditorGUILayout.EnumPopup("类型", cell.ContentType);
+            }
+
+            EditorGUI.BeginChangeCheck();
+
+            int newId = EditorGUILayout.IntField("ContentId", cell.ContentId);
+            string newName = EditorGUILayout.TextField("名称", cell.ContentName);
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                cell.ContentId = newId;
+                cell.ContentName = newName;
+                EditorUtility.SetDirty(S.Data);
+            }
+
+            if (cell.ContentType != CellContentType.Empty && cell.ContentType != CellContentType.Wall)
+            {
+                EditorGUI.DrawRect(
+                    EditorGUILayout.GetControlRect(GUILayout.Height(4)),
+                    GetCellColor(cell, S.SelX, S.SelY)
+                );
+            }
+
+            if (S.BlockW > 1 || S.BlockH > 1)
+            {
+                EditorGUILayout.HelpBox($"当前使用 {S.BlockW}x{S.BlockH} 块模式放置 Space", MessageType.Info);
+            }
+
+            if (GUILayout.Button("关闭", GUILayout.Height(22)))
+            {
+                S.ClearSelection();
+            }
+
+            EditorGUILayout.EndVertical();
+        }
+
+        private static string GetContentLabel(CellContentType type)
+        {
+            return type switch
+            {
+                CellContentType.Empty => "空",
+                CellContentType.Wall => "墙壁",
+                CellContentType.Space => "空间",
+                CellContentType.Event => "事件",
+                CellContentType.Item => "物资",
+                CellContentType.Enemy => "敌人",
+                CellContentType.Eraser => "擦除",
+                _ => "未知"
+            };
+        }
+
+        private void CreateNewMap()
+        {
+            string path = EditorUtility.SaveFilePanelInProject(
+                "新建 Crawler Map",
+                "NewCrawlerMap",
+                "asset",
+                "选择保存位置"
+            );
+
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
+            CrawlerMapData newData = CreateInstance<CrawlerMapData>();
+            newData.Initialize(20, 20);
+            AssetDatabase.CreateAsset(newData, path);
+            AssetDatabase.SaveAssets();
+
+            S.Data = newData;
+            S.DataPath = path;
+            S.PanOffset = Vector2.zero;
+            S.Zoom = 1f;
+            S.ClearSelection();
+        }
+
+        private void SaveMap()
+        {
+            if (S.Data == null)
+            {
+                EditorUtility.DisplayDialog("提示", "没有打开的地图数据", "OK");
+                return;
+            }
+
+            EditorUtility.SetDirty(S.Data);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"地图已保存: {AssetDatabase.GetAssetPath(S.Data)}");
+        }
+
+        private void LoadMap()
+        {
+            string path = EditorUtility.OpenFilePanel("加载 Crawler Map", "Assets", "asset");
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
+            string relativePath = GetRelativePath(path);
+            CrawlerMapData loaded = AssetDatabase.LoadAssetAtPath<CrawlerMapData>(relativePath);
+            if (loaded == null)
+            {
+                EditorUtility.DisplayDialog("错误", "无法加载所选文件", "OK");
+                return;
+            }
+
+            S.Data = loaded;
+            S.DataPath = relativePath;
+            S.PanOffset = Vector2.zero;
+            S.Zoom = 1f;
+            S.ClearSelection();
+            Debug.Log($"已加载地图: {relativePath}");
+        }
+
+        private static string GetRelativePath(string absolutePath)
+        {
+            string dataPath = Application.dataPath;
+            if (absolutePath.StartsWith(dataPath))
+            {
+                return "Assets" + absolutePath[dataPath.Length..];
+            }
+
+            return absolutePath;
+        }
+    }
+}

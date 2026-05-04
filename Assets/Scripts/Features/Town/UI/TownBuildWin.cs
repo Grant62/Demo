@@ -33,6 +33,7 @@ namespace Features.Town.UI
             {
                 Destroy(_entriesRoot.GetChild(i).gameObject);
             }
+
             _buildItems.Clear();
 
             // 动态加载 BuildItem

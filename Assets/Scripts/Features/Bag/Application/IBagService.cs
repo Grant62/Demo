@@ -8,12 +8,12 @@ namespace Features.Bag.Application
         IReadOnlyList<BagItemData> BagItems { get; }
         IReadOnlyDictionary<EquipmentSlotType, BagItemData> Equipped { get; }
 
-    void Equip(int bagIndex);
-    void Unequip(EquipmentSlotType slotType);
-    void EquipFromEquipment(EquipmentSlotType sourceSlot, EquipmentSlotType targetSlot);
-    void AddItem(BagItemData item);
-    void RemoveItem(int bagIndex, int count);
-    void SwapBagItems(int indexA, int indexB);
-    bool CanEquip(int bagIndex);
+        void Equip(int bagIndex);
+        void Unequip(EquipmentSlotType slotType);
+        void EquipFromEquipment(EquipmentSlotType sourceSlot, EquipmentSlotType targetSlot);
+        void AddItem(BagItemData item);
+        void RemoveItem(int bagIndex, int count);
+        void SwapBagItems(int indexA, int indexB);
+        bool CanEquip(int bagIndex);
     }
 }

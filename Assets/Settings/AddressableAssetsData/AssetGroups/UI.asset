@@ -47,6 +47,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: af3ad1463cfffb9449d34d28173e9130
+    m_Address: BattlePanel
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bf9bd916b06f52444853f762ec8e3831
     m_Address: TownBuildWin
     m_ReadOnly: 0
