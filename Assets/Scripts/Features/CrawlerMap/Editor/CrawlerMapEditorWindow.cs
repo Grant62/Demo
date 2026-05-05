@@ -14,6 +14,9 @@ namespace Features.CrawlerMap.Editor
         private static readonly Color ColorEmptyB = new(0.22f, 0.22f, 0.24f, 0.35f);
         private static readonly Color ColorWall = new(0f, 0f, 0f);
         private static readonly Color ColorSpace = new(0.85f, 0.85f, 0.85f);
+        private static readonly Color ColorEntrance = new(1.00f, 0.84f, 0.00f);
+        private static readonly Color ColorExit = new(1.00f, 0.65f, 0.10f);
+        private static readonly Color ColorBoss = new(0.75f, 0.25f, 0.85f);
         private static readonly Color ColorEvent = new(0.30f, 0.55f, 1.00f);
         private static readonly Color ColorItem = new(0.30f, 0.90f, 0.35f);
         private static readonly Color ColorEnemy = new(0.95f, 0.30f, 0.30f);
@@ -23,6 +26,9 @@ namespace Features.CrawlerMap.Editor
 
         private static readonly Color ColorBrushSpace = new(0.75f, 0.75f, 0.75f);
         private static readonly Color ColorBrushWall = new(0f, 0f, 0f);
+        private static readonly Color ColorBrushEntrance = new(1.00f, 0.84f, 0.00f);
+        private static readonly Color ColorBrushExit = new(1.00f, 0.65f, 0.10f);
+        private static readonly Color ColorBrushBoss = new(0.75f, 0.25f, 0.85f);
         private static readonly Color ColorBrushErase = new(0.50f, 0.25f, 0.05f);
         private static readonly Color ColorBrushEvent = new(0.30f, 0.55f, 1.00f);
         private static readonly Color ColorBrushItem = new(0.30f, 0.90f, 0.35f);
@@ -73,27 +79,23 @@ namespace Features.CrawlerMap.Editor
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
-            if (GUILayout.Button("New", EditorStyles.toolbarButton, GUILayout.Width(40)))
+            if (GUILayout.Button("新建", EditorStyles.toolbarButton, GUILayout.Width(40)))
             {
                 CreateNewMap();
             }
-
-            if (GUILayout.Button("Save", EditorStyles.toolbarButton, GUILayout.Width(40)))
+            if (GUILayout.Button("保存", EditorStyles.toolbarButton, GUILayout.Width(40)))
             {
                 SaveMap();
             }
-
-            if (GUILayout.Button("Load", EditorStyles.toolbarButton, GUILayout.Width(40)))
+            if (GUILayout.Button("加载", EditorStyles.toolbarButton, GUILayout.Width(40)))
             {
                 LoadMap();
             }
-
-            if (GUILayout.Button("Generate", EditorStyles.toolbarButton, GUILayout.Width(56)))
+            if (GUILayout.Button("生成", EditorStyles.toolbarButton, GUILayout.Width(40)))
             {
                 S.ShowGenSettings = !S.ShowGenSettings;
             }
-
-            if (GUILayout.Button("Clear", EditorStyles.toolbarButton, GUILayout.Width(40)))
+            if (GUILayout.Button("清空", EditorStyles.toolbarButton, GUILayout.Width(40)))
             {
                 if (EditorUtility.DisplayDialog("Clear All", "确认清除所有格子?", "Yes", "No"))
                 {
@@ -115,6 +117,9 @@ namespace Features.CrawlerMap.Editor
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
             DrawBrushButton(CellContentType.Space, ColorBrushSpace);
+            DrawBrushButton(CellContentType.Entrance, ColorBrushEntrance);
+            DrawBrushButton(CellContentType.Exit, ColorBrushExit);
+            DrawBrushButton(CellContentType.Boss, ColorBrushBoss);
             DrawBrushButton(CellContentType.Wall, ColorBrushWall);
             DrawBrushButton(CellContentType.Eraser, ColorBrushErase);
             DrawBrushButton(CellContentType.Event, ColorBrushEvent);
@@ -128,6 +133,8 @@ namespace Features.CrawlerMap.Editor
             DrawBlockToolbarButton(3, 3, "3x3");
             DrawBlockToolbarButton(2, 3, "2x3");
             DrawBlockToolbarButton(3, 2, "3x2");
+            DrawBlockToolbarButton(4, 3, "4x3");
+            DrawBlockToolbarButton(4, 4, "4x4");
 
             GUILayout.FlexibleSpace();
 
@@ -142,13 +149,16 @@ namespace Features.CrawlerMap.Editor
             bool isActive = S.Brush == type && S.BlockW == 1;
             string label = type switch
             {
-                CellContentType.Space => "Space",
-                CellContentType.Wall => "Wall",
-                CellContentType.Eraser => "Erase",
-                CellContentType.Event => "Event",
-                CellContentType.Item => "Item",
-                CellContentType.Enemy => "Enemy",
-                _ => "?"
+                CellContentType.Space => "区域",
+                CellContentType.Entrance => "入口",
+                CellContentType.Exit => "出口",
+                CellContentType.Boss => "Boss",
+                CellContentType.Wall => "墙",
+                CellContentType.Eraser => "擦除",
+                CellContentType.Event => "事件",
+                CellContentType.Item => "物资",
+                CellContentType.Enemy => "敌人",
+                _ => "?",
             };
 
             Color oldColor = GUI.color;
@@ -157,14 +167,13 @@ namespace Features.CrawlerMap.Editor
                 GUI.color = new Color(0.6f, 0.8f, 1f);
             }
 
-            if (GUILayout.Button($"  {label}", EditorStyles.toolbarButton, GUILayout.Width(56)))
+            if (GUILayout.Button($"  {label}", EditorStyles.toolbarButton, GUILayout.Width(54)))
             {
                 S.Brush = type;
                 S.BlockW = 1;
                 S.BlockH = 1;
             }
 
-            // Draw color swatch using the last button rect
             if (Event.current.type == EventType.Repaint)
             {
                 Rect lastRect = GUILayoutUtility.GetLastRect();
@@ -315,6 +324,11 @@ namespace Features.CrawlerMap.Editor
                     break;
 
                 case EventType.MouseUp:
+                    if (e.button == 0 && S.Data != null)
+                    {
+                        AssetDatabase.SaveAssets();
+                    }
+
                     if (e.button == 2)
                     {
                         S.IsPanning = false;
@@ -392,6 +406,33 @@ namespace Features.CrawlerMap.Editor
                     CellData cell = S.Data.GetCell(x, y);
                     Color color = GetCellColor(cell, x, y);
                     EditorGUI.DrawRect(cellRect, color);
+
+                    if (cell != null && cell.HasOverlay)
+                    {
+                        Color oc = cell.OverlayType switch
+                        {
+                            CellContentType.Event => ColorEvent,
+                            CellContentType.Item => ColorItem,
+                            CellContentType.Enemy => ColorEnemy,
+                            _ => Color.white,
+                        };
+                        Rect corner = new(cellRect.x + cs - 8, cellRect.y, 8, 8);
+                        EditorGUI.DrawRect(corner, oc);
+                    }
+
+                    if (cell != null && cell.ContentType == CellContentType.Wall && cs > 8)
+                    {
+                        Color lineColor = new(0.35f, 0.35f, 0.35f);
+                        float step = cs / 5f;
+                        for (int i = 0; i <= 5; i++)
+                        {
+                            float t = i * step;
+                            EditorGUI.DrawRect(
+                                new Rect(cellRect.x + t, cellRect.y, 1, cellRect.height), lineColor);
+                            EditorGUI.DrawRect(
+                                new Rect(cellRect.x, cellRect.y + t, cellRect.width, 1), lineColor);
+                        }
+                    }
                 }
             }
 
@@ -455,9 +496,20 @@ namespace Features.CrawlerMap.Editor
                     for (int by = 0; by < S.BlockH; by++)
                     {
                         CellData cell = S.Data.GetCell(x + bx, y + by);
-                        if (cell != null)
+                        if (cell == null)
+                        {
+                            continue;
+                        }
+                        if (cell.HasOverlay)
+                        {
+                            cell.OverlayType = CellContentType.Empty;
+                            cell.ContentId = 0;
+                            cell.ContentName = string.Empty;
+                        }
+                        else if (cell.ContentType != CellContentType.Empty)
                         {
                             cell.ContentType = CellContentType.Empty;
+                            cell.OverlayType = CellContentType.Empty;
                             cell.ContentId = 0;
                             cell.ContentName = string.Empty;
                         }
@@ -468,33 +520,74 @@ namespace Features.CrawlerMap.Editor
                 return;
             }
 
-            if (S.Brush == CellContentType.Space && (S.BlockW > 1 || S.BlockH > 1))
+            if (S.Brush == CellContentType.Space)
             {
-                RoomBlock block = new()
+                for (int bx = 0; bx < S.BlockW; bx++)
                 {
-                    Name = $"Block_{x}_{y}",
-                    OriginX = x,
-                    OriginY = y,
-                    Width = S.BlockW,
-                    Height = S.BlockH
-                };
-                S.Data.ApplyBlock(block);
+                    for (int by = 0; by < S.BlockH; by++)
+                    {
+                        CellData cell = S.Data.GetCell(x + bx, y + by);
+                        if (cell != null)
+                        {
+                            cell.ContentType = CellContentType.Space;
+                            cell.OverlayType = CellContentType.Empty;
+                            cell.ContentId = 0;
+                            cell.ContentName = string.Empty;
+                        }
+                    }
+                }
                 EditorUtility.SetDirty(S.Data);
                 return;
             }
 
             CellData target = S.Data.GetCell(x, y);
-            if (target != null)
+            if (target == null)
             {
-                target.ContentType = S.Brush;
-                if (S.Brush == CellContentType.Space)
-                {
+                return;
+            }
+
+            switch (S.Brush)
+            {
+                case CellContentType.Space:
+                    target.ContentType = CellContentType.Space;
+                    target.OverlayType = CellContentType.Empty;
                     target.ContentId = 0;
                     target.ContentName = string.Empty;
-                }
+                    break;
 
-                EditorUtility.SetDirty(S.Data);
+                case CellContentType.Wall:
+                    target.ContentType = CellContentType.Wall;
+                    target.OverlayType = CellContentType.Empty;
+                    target.ContentId = 0;
+                    target.ContentName = string.Empty;
+                    break;
+
+                case CellContentType.Entrance:
+                case CellContentType.Exit:
+                case CellContentType.Boss:
+                    target.ContentType = CellContentType.Space;
+                    target.OverlayType = S.Brush;
+                    target.ContentId = 0;
+                    target.ContentName = string.Empty;
+                    break;
+
+                default:
+                    // Event / Item / Enemy: overlay on walkable, direct on other
+                    if (target.ContentType == CellContentType.Space)
+                    {
+                        target.OverlayType = S.Brush;
+                    }
+                    else
+                    {
+                        target.ContentType = S.Brush;
+                        target.OverlayType = CellContentType.Empty;
+                    }
+                    target.ContentId = 0;
+                    target.ContentName = string.Empty;
+                    break;
             }
+
+            EditorUtility.SetDirty(S.Data);
         }
 
         private void MouseToCell(Vector2 mousePos, Rect rect, out int x, out int y)
@@ -517,7 +610,9 @@ namespace Features.CrawlerMap.Editor
                 return ColorEmptyA;
             }
 
-            switch (cell.ContentType)
+            CellContentType showType = cell.HasOverlay ? cell.OverlayType : cell.ContentType;
+
+            switch (showType)
             {
                 case CellContentType.Empty:
                     return (gridX + gridY) % 2 == 0 ? ColorEmptyA : ColorEmptyB;
@@ -525,6 +620,12 @@ namespace Features.CrawlerMap.Editor
                     return ColorWall;
                 case CellContentType.Space:
                     return ColorSpace;
+                case CellContentType.Entrance:
+                    return ColorEntrance;
+                case CellContentType.Exit:
+                    return ColorExit;
+                case CellContentType.Boss:
+                    return ColorBoss;
                 case CellContentType.Event:
                     return ColorEvent;
                 case CellContentType.Item:
@@ -553,10 +654,13 @@ namespace Features.CrawlerMap.Editor
             EditorGUILayout.BeginVertical(GUI.skin.box);
             EditorGUILayout.LabelField($"单元格 ({S.SelX}, {S.SelY})", EditorStyles.boldLabel);
 
-            string contentLabel = GetContentLabel(cell.ContentType);
             using (new EditorGUI.DisabledGroupScope(true))
             {
-                EditorGUILayout.EnumPopup("类型", cell.ContentType);
+                EditorGUILayout.EnumPopup("基底类型", cell.ContentType);
+                if (cell.HasOverlay)
+                {
+                    EditorGUILayout.EnumPopup("叠放类型", cell.OverlayType);
+                }
             }
 
             EditorGUI.BeginChangeCheck();
@@ -571,12 +675,30 @@ namespace Features.CrawlerMap.Editor
                 EditorUtility.SetDirty(S.Data);
             }
 
+            // Color bar: base color + overlay indicator
             if (cell.ContentType != CellContentType.Empty && cell.ContentType != CellContentType.Wall)
             {
-                EditorGUI.DrawRect(
-                    EditorGUILayout.GetControlRect(GUILayout.Height(4)),
-                    GetCellColor(cell, S.SelX, S.SelY)
-                );
+                Color baseColor = cell.ContentType switch
+                {
+                    CellContentType.Space => ColorSpace,
+                    CellContentType.Entrance => ColorEntrance,
+                    CellContentType.Exit => ColorExit,
+                    CellContentType.Boss => ColorBoss,
+                    _ => ColorSpace,
+                };
+                Rect colorRect = EditorGUILayout.GetControlRect(GUILayout.Height(6));
+                EditorGUI.DrawRect(colorRect, baseColor);
+                if (cell.HasOverlay)
+                {
+                    Color oc = cell.OverlayType switch
+                    {
+                        CellContentType.Event => ColorEvent,
+                        CellContentType.Item => ColorItem,
+                        CellContentType.Enemy => ColorEnemy,
+                        _ => Color.white,
+                    };
+                    EditorGUI.DrawRect(new Rect(colorRect.x + colorRect.width - 20, colorRect.y, 20, 6), oc);
+                }
             }
 
             if (S.BlockW > 1 || S.BlockH > 1)
@@ -599,11 +721,14 @@ namespace Features.CrawlerMap.Editor
                 CellContentType.Empty => "空",
                 CellContentType.Wall => "墙壁",
                 CellContentType.Space => "空间",
+                CellContentType.Entrance => "入口",
+                CellContentType.Exit => "出口",
+                CellContentType.Boss => "Boss",
                 CellContentType.Event => "事件",
                 CellContentType.Item => "物资",
                 CellContentType.Enemy => "敌人",
                 CellContentType.Eraser => "擦除",
-                _ => "未知"
+                _ => "未知",
             };
         }
 
@@ -622,7 +747,7 @@ namespace Features.CrawlerMap.Editor
             }
 
             CrawlerMapData newData = CreateInstance<CrawlerMapData>();
-            newData.Initialize(20, 20);
+            newData.Initialize(25, 25);
             AssetDatabase.CreateAsset(newData, path);
             AssetDatabase.SaveAssets();
 

@@ -6,8 +6,8 @@ namespace Features.CrawlerMap.Domain
     [CreateAssetMenu(menuName = "Crawler Map/Map Data", fileName = "NewCrawlerMap")]
     public class CrawlerMapData : ScriptableObject
     {
-        public int Width = 20;
-        public int Height = 20;
+        public int Width = 25;
+        public int Height = 25;
         public List<CellData> Cells = new();
         public List<RoomBlock> Blocks = new();
 
@@ -80,10 +80,10 @@ namespace Features.CrawlerMap.Domain
                     if (cell != null)
                     {
                         cell.ContentType = CellContentType.Space;
+                        cell.OverlayType = CellContentType.Empty;
                     }
                 }
             }
-
             Blocks.Add(block);
         }
 

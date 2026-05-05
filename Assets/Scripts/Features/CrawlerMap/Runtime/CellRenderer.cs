@@ -11,6 +11,9 @@ namespace Features.CrawlerMap.Runtime
 
         private static readonly Color ColorSpace = new(0.85f, 0.85f, 0.85f);
         private static readonly Color ColorWall = new(0f, 0f, 0f);
+        private static readonly Color ColorEntrance = new(1.00f, 0.84f, 0.00f);
+        private static readonly Color ColorExit = new(1.00f, 0.65f, 0.10f);
+        private static readonly Color ColorBoss = new(0.75f, 0.25f, 0.85f);
         private static readonly Color ColorEvent = new(0.30f, 0.55f, 1.00f);
         private static readonly Color ColorItem = new(0.30f, 0.90f, 0.35f);
         private static readonly Color ColorEnemy = new(0.95f, 0.30f, 0.30f);
@@ -39,7 +42,9 @@ namespace Features.CrawlerMap.Runtime
                 return;
             }
 
-            switch (cellData.ContentType)
+            CellContentType showType = cellData.HasOverlay ? cellData.OverlayType : cellData.ContentType;
+
+            switch (showType)
             {
                 case CellContentType.Empty:
                     _spriteRenderer.color = ColorEmpty;
@@ -49,6 +54,15 @@ namespace Features.CrawlerMap.Runtime
                     break;
                 case CellContentType.Space:
                     _spriteRenderer.color = ColorSpace;
+                    break;
+                case CellContentType.Entrance:
+                    _spriteRenderer.color = ColorEntrance;
+                    break;
+                case CellContentType.Exit:
+                    _spriteRenderer.color = ColorExit;
+                    break;
+                case CellContentType.Boss:
+                    _spriteRenderer.color = ColorBoss;
                     break;
                 case CellContentType.Event:
                     _spriteRenderer.color = ColorEvent;
