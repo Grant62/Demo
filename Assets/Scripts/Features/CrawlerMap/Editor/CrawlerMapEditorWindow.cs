@@ -337,16 +337,7 @@ namespace Features.CrawlerMap.Editor
                     {
                         if (e.button == 0 && S.HasBrush && S.Data != null)
                         {
-                            S.LastPaintX = -1;
-                            S.LastPaintY = -1;
                             PaintCell(hoverX, hoverY);
-                            e.Use();
-                        }
-                        else if (e.button == 0 && !S.HasBrush)
-                        {
-                            S.IsPanning = true;
-                            S.PanStartMouse = mousePos;
-                            S.PanStartOffset = S.PanOffset;
                             e.Use();
                         }
                         else if (e.button == 2)
@@ -361,37 +352,16 @@ namespace Features.CrawlerMap.Editor
                     break;
 
                 case EventType.MouseDrag:
-                    if (mouseInRect)
+                    if (mouseInRect && S.IsPanning)
                     {
-                        if (S.IsPanning || (e.button == 0 && !S.HasBrush))
-                        {
-                            if (!S.IsPanning)
-                            {
-                                S.IsPanning = true;
-                                S.PanStartMouse = mousePos;
-                                S.PanStartOffset = S.PanOffset;
-                            }
-                            Vector2 delta = (mousePos - S.PanStartMouse) / CellSize;
-                            S.PanOffset = S.PanStartOffset + new Vector2(delta.x, -delta.y);
-                            e.Use();
-                        }
-                        else if (e.button == 0 && S.HasBrush
-                                 && (hoverX != S.LastPaintX || hoverY != S.LastPaintY))
-                        {
-                            S.IsDragging = true;
-                            S.LastPaintX = hoverX;
-                            S.LastPaintY = hoverY;
-                            PaintCell(hoverX, hoverY);
-                            e.Use();
-                        }
+                        Vector2 delta = (mousePos - S.PanStartMouse) / CellSize;
+                        S.PanOffset = S.PanStartOffset + new Vector2(delta.x, -delta.y);
+                        e.Use();
                     }
-
                     break;
 
                 case EventType.MouseUp:
-                    S.IsDragging = false;
-
-                    if (e.button == 0 && S.Data != null)
+                    if (e.button == 0 && S.HasBrush && S.Data != null)
                     {
                         AssetDatabase.SaveAssets();
                     }
@@ -579,7 +549,7 @@ namespace Features.CrawlerMap.Editor
                             cell.ContentId = 0;
                             cell.ContentName = string.Empty;
                         }
-                        else if (!S.IsDragging && cell.ContentType != CellContentType.Empty)
+                        else if (cell.ContentType != CellContentType.Empty)
                         {
                             cell.ContentType = CellContentType.Empty;
                             cell.OverlayType = CellContentType.Empty;
