@@ -1,6 +1,6 @@
 namespace Configuration.ExcelData.DataClass
 {
-    public class MaterialsConfigInfo
+    public class MaterialsInfo
     {
         public int Id;
         public int Stage;

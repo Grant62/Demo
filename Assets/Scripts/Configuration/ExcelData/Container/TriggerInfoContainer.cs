@@ -4,9 +4,9 @@ using Services.ExcelTool;
 
 namespace Configuration.ExcelData.Container
 {
-    [BinaryTable(DataType = typeof(RoomConfigInfo))]
-    public class RoomConfigInfoContainer
+    [BinaryTable(DataType = typeof(TriggerInfo))]
+    public class TriggerInfoContainer
     {
-        public Dictionary<int, RoomConfigInfo> DataDic = new();
+        public Dictionary<int, TriggerInfo> DataDic = new();
     }
 }

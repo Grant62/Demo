@@ -162,7 +162,7 @@ namespace Features.CrawlerMap.Editor
 
         private void DrawBrushButton(CellContentType type, Color swatchColor)
         {
-            bool isActive = S.HasBrush && S.Brush == type && S.BlockW == 1;
+            bool isActive = S.HasBrush && S.Brush == type;
             string label = type switch
             {
                 CellContentType.Space => "区域",

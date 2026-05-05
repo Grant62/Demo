@@ -8,6 +8,6 @@ namespace Configuration.ExcelData.DataClass
         public int Point;
         public string ResAddress;
         public string Desc;
-        public string EntryId;
+        public int EntryId;
     }
 }

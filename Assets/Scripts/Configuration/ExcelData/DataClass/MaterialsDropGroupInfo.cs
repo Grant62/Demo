@@ -1,6 +1,6 @@
 namespace Configuration.ExcelData.DataClass
 {
-    public class MaterialsDropGroupConfigInfo
+    public class MaterialsDropGroupInfo
     {
         public int DropId;
         public int DroupGroupId;
