@@ -11,6 +11,9 @@ namespace Features.CrawlerMap.Editor
         public CellContentType Brush = CellContentType.Space;
         public int BlockW = 1;
         public int BlockH = 1;
+        public int SavedBlockW = 1;
+        public int SavedBlockH = 1;
+        public bool HasBrush;
 
         public float Zoom = 1f;
         public Vector2 PanOffset = Vector2.zero;
@@ -21,6 +24,10 @@ namespace Features.CrawlerMap.Editor
         public int SelX = -1;
         public int SelY = -1;
         public bool ShowInspector;
+
+        public int LastPaintX = -1;
+        public int LastPaintY = -1;
+        public bool IsDragging;
 
         public bool ShowGenSettings;
         public GenerationSettings GenSettings = GenerationSettings.Default();

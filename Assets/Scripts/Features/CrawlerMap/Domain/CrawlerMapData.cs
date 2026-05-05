@@ -118,7 +118,6 @@ namespace Features.CrawlerMap.Domain
             {
                 Cells.Add(new CellData());
             }
-
             Blocks.Clear();
         }
     }
