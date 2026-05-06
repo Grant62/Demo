@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: b49733247cacee449b3657bef6b93510, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a1c0a957a612c824499aaaea87e89a3b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -135,7 +135,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _infantryCamp: {fileID: 8857435060314854568}
   _administrativeHall: {fileID: 7024842441331438743}
-  _church: {fileID: 8274615992702232386}
   _sentryPost: {fileID: 8274615992702232386}
 --- !u!1 &7024842441331438743
 GameObject:
@@ -377,7 +376,7 @@ SpriteRenderer:
   m_Size: {x: 20.48, y: 20.48}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &914630424976653544
@@ -605,7 +604,7 @@ SpriteRenderer:
   m_Size: {x: 2.85, y: 2.51}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &8432551296126730276
