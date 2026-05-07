@@ -39,7 +39,7 @@ namespace Features.CrawlerMap.Domain
 
         public override int GetHashCode()
         {
-            return (X << 16) ^ Y;
+            return X << 16 ^ Y;
         }
 
         public static bool operator ==(GridCoord a, GridCoord b)

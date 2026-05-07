@@ -84,6 +84,7 @@ namespace Features.CrawlerMap.Domain
                     }
                 }
             }
+
             Blocks.Add(block);
         }
 
@@ -118,6 +119,7 @@ namespace Features.CrawlerMap.Domain
             {
                 Cells.Add(new CellData());
             }
+
             Blocks.Clear();
         }
     }

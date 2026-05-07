@@ -83,18 +83,22 @@ namespace Features.CrawlerMap.Editor
             {
                 CreateNewMap();
             }
+
             if (GUILayout.Button("保存", EditorStyles.toolbarButton, GUILayout.Width(40)))
             {
                 SaveMap();
             }
+
             if (GUILayout.Button("加载", EditorStyles.toolbarButton, GUILayout.Width(40)))
             {
                 LoadMap();
             }
+
             if (GUILayout.Button("生成", EditorStyles.toolbarButton, GUILayout.Width(40)))
             {
                 S.ShowGenSettings = !S.ShowGenSettings;
             }
+
             if (GUILayout.Button("清空", EditorStyles.toolbarButton, GUILayout.Width(40)))
             {
                 if (EditorUtility.DisplayDialog("Clear All", "确认清除所有格子?", "Yes", "No"))
@@ -136,7 +140,7 @@ namespace Features.CrawlerMap.Editor
                 CellContentType.Event => "事件",
                 CellContentType.Item => "物资",
                 CellContentType.Enemy => "敌人",
-                _ => "?",
+                _ => "?"
             };
             string status = S.HasBrush ? brushName : "无画刷";
             GUILayout.Label(status, EditorStyles.miniLabel, GUILayout.Width(60));
@@ -174,7 +178,7 @@ namespace Features.CrawlerMap.Editor
                 CellContentType.Event => "事件",
                 CellContentType.Item => "物资",
                 CellContentType.Enemy => "敌人",
-                _ => "?",
+                _ => "?"
             };
 
             Color oldColor = GUI.color;
@@ -204,6 +208,7 @@ namespace Features.CrawlerMap.Editor
                         S.BlockW = 1;
                         S.BlockH = 1;
                     }
+
                     S.HasBrush = true;
                 }
             }
@@ -358,6 +363,7 @@ namespace Features.CrawlerMap.Editor
                         S.PanOffset = S.PanStartOffset + new Vector2(delta.x, -delta.y);
                         e.Use();
                     }
+
                     break;
 
                 case EventType.MouseUp:
@@ -445,20 +451,19 @@ namespace Features.CrawlerMap.Editor
                     EditorGUI.DrawRect(cellRect, color);
 
                     if (cell != null && cell.HasOverlay
-                        && cell.OverlayType is CellContentType.Event
-                            or CellContentType.Item
-                            or CellContentType.Enemy)
+                                     && cell.OverlayType is CellContentType.Event
+                                         or CellContentType.Item
+                                         or CellContentType.Enemy)
                     {
                         Color oc = cell.OverlayType switch
                         {
                             CellContentType.Event => ColorEvent,
                             CellContentType.Item => ColorItem,
                             CellContentType.Enemy => ColorEnemy,
-                            _ => Color.white,
+                            _ => Color.white
                         };
                         Rect mark = new(cellRect.x + cs - 9, cellRect.y, 9, 9);
                         EditorGUI.DrawRect(mark, oc);
-
                     }
 
                     if (cell != null && cell.ContentType == CellContentType.Wall && cs > 8)
@@ -474,8 +479,6 @@ namespace Features.CrawlerMap.Editor
                                 new Rect(cellRect.x, cellRect.y + t, cellRect.width, 1), lineColor);
                         }
                     }
-
-
                 }
             }
 
@@ -543,6 +546,7 @@ namespace Features.CrawlerMap.Editor
                         {
                             continue;
                         }
+
                         if (cell.HasOverlay)
                         {
                             cell.OverlayType = CellContentType.Empty;
@@ -579,6 +583,7 @@ namespace Features.CrawlerMap.Editor
                         }
                     }
                 }
+
                 EditorUtility.SetDirty(S.Data);
                 return;
             }
@@ -631,6 +636,7 @@ namespace Features.CrawlerMap.Editor
                         target.ContentType = S.Brush;
                         target.OverlayType = CellContentType.Empty;
                     }
+
                     target.ContentId = 0;
                     target.ContentName = string.Empty;
                     break;
@@ -733,7 +739,7 @@ namespace Features.CrawlerMap.Editor
                     CellContentType.Entrance => ColorEntrance,
                     CellContentType.Exit => ColorExit,
                     CellContentType.Boss => ColorBoss,
-                    _ => ColorSpace,
+                    _ => ColorSpace
                 };
                 Rect colorRect = EditorGUILayout.GetControlRect(GUILayout.Height(6));
                 EditorGUI.DrawRect(colorRect, baseColor);
@@ -744,7 +750,7 @@ namespace Features.CrawlerMap.Editor
                         CellContentType.Event => ColorEvent,
                         CellContentType.Item => ColorItem,
                         CellContentType.Enemy => ColorEnemy,
-                        _ => Color.white,
+                        _ => Color.white
                     };
                     EditorGUI.DrawRect(new Rect(colorRect.x + colorRect.width - 20, colorRect.y, 20, 6), oc);
                 }
@@ -777,7 +783,7 @@ namespace Features.CrawlerMap.Editor
                 CellContentType.Item => "物资",
                 CellContentType.Enemy => "敌人",
                 CellContentType.Eraser => "擦除",
-                _ => "未知",
+                _ => "未知"
             };
         }
 

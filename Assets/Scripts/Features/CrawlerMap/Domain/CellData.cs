@@ -10,10 +10,13 @@ namespace Features.CrawlerMap.Domain
         public int ContentId;
         public string ContentName = string.Empty;
 
-        public bool HasOverlay => OverlayType != CellContentType.Empty
-                                  && OverlayType != CellContentType.Eraser
-                                  && OverlayType != CellContentType.Space
-                                  && OverlayType != CellContentType.Wall;
+        public bool HasOverlay
+        {
+            get => OverlayType != CellContentType.Empty
+                   && OverlayType != CellContentType.Eraser
+                   && OverlayType != CellContentType.Space
+                   && OverlayType != CellContentType.Wall;
+        }
 
         public CellData Clone()
         {
