@@ -16,72 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: f3cb0ae565356aa4b93c66027a46f899
-  m_SerializeEntries:
-  - m_GUID: 2111ed6a1695060419573afbc45044c8
-    m_Address: "\u4EBA\u50CF\u6E38\u4FA0"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4d89fe2fe9663a6449a3d1a8f64a117c
-    m_Address: "\u4EBA\u50CF\u75AB\u533B"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 675c7ab4889923f45b8bd1d12c481003
-    m_Address: "\u4EBA\u50CF\u7267\u5E08"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 797ecdc009b0b6144983779b3154589a
-    m_Address: BGpurple
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 839fe3d472c08b14f93271d21cc42a29
-    m_Address: "\u4EBA\u50CF\u5F3A\u76D7"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b25508293b4df2b45bee8a7752f7ee58
-    m_Address: "\u4EBA\u50CF\u5251\u5723"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c26d8568d8ac36945990cdb7cb064274
-    m_Address: BGgreen
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c983f107d8e14574a8c47a105c571fc8
-    m_Address: "\u4EBA\u50CF\u67AA\u5175"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cecda78d25c8ba3439647ba4072902e1
-    m_Address: BGempty
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d804839d76dc6e54b94feda4ff732545
-    m_Address: "\u62DB\u52DF1"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: da2386201cd6e6542a65c3578e852ee3
-    m_Address: "\u4EBA\u50CF\u523A\u5BA2"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: dc3c486ff8e1a174c81a6bb1bdd9c7d7
-    m_Address: "\u62DB\u52DF2"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ee9e754403d69384ba1e4bc46b2b79eb
-    m_Address: BGorange
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 74fcbaa473ff1774b899b6f7866c9b7b, type: 2}
   m_SchemaSet:
