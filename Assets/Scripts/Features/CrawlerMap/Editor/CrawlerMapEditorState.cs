@@ -25,6 +25,10 @@ namespace Features.CrawlerMap.Editor
         public int SelY = -1;
         public bool ShowInspector;
 
+        public int LastPaintX = -1;
+        public int LastPaintY = -1;
+        public bool IsPainting;
+
         public bool ShowGenSettings;
         public GenerationSettings GenSettings = GenerationSettings.Default();
 

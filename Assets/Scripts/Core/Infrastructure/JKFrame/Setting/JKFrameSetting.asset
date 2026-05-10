@@ -67,7 +67,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 7
+      Data: 4
     - Name: 
       Entry: 7
       Data: 
@@ -127,91 +127,10 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Features.Town.UI.CombatEntriesWin
-    - Name: $v
-      Entry: 7
-      Data: 5|JKFrame.UIWindowData, JKFrame
-    - Name: isCache
-      Entry: 5
-      Data: false
-    - Name: assetPath
-      Entry: 1
-      Data: CombatEntriesWin
-    - Name: layerNum
-      Entry: 3
-      Data: 1
-    - Name: instance
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Features.Town.UI.TownBuildWin
-    - Name: $v
-      Entry: 7
-      Data: 6|JKFrame.UIWindowData, JKFrame
-    - Name: isCache
-      Entry: 5
-      Data: false
-    - Name: assetPath
-      Entry: 1
-      Data: TownBuildWin
-    - Name: layerNum
-      Entry: 3
-      Data: 1
-    - Name: instance
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Features.Town.UI.TownButtonsWin
-    - Name: $v
-      Entry: 7
-      Data: 7|JKFrame.UIWindowData, JKFrame
-    - Name: isCache
-      Entry: 5
-      Data: false
-    - Name: assetPath
-      Entry: 1
-      Data: TownButtonsWin
-    - Name: layerNum
-      Entry: 3
-      Data: 1
-    - Name: instance
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
       Data: Features.Battle.UI.BattlePanelWin
     - Name: $v
       Entry: 7
-      Data: 8|JKFrame.UIWindowData, JKFrame
+      Data: 5|JKFrame.UIWindowData, JKFrame
     - Name: isCache
       Entry: 5
       Data: false
@@ -238,7 +157,7 @@ MonoBehaviour:
       Data: Features.Bag.UI.BagPanelWin
     - Name: $v
       Entry: 7
-      Data: 9|JKFrame.UIWindowData, JKFrame
+      Data: 6|JKFrame.UIWindowData, JKFrame
     - Name: isCache
       Entry: 5
       Data: true

@@ -52,6 +52,7 @@ namespace Features.CrawlerMap.Editor
 
         private void OnGUI()
         {
+            HandleKeyboardShortcuts();
             DrawToolbar();
             DrawGeneratePanel();
 
@@ -108,27 +109,7 @@ namespace Features.CrawlerMap.Editor
                 }
             }
 
-            GUILayout.FlexibleSpace();
-
-            GUILayout.Label($"缩放 {S.Zoom * 100:F0}%", EditorStyles.miniLabel);
-            S.Zoom = GUILayout.HorizontalSlider(S.Zoom, 0.3f, 3f, GUILayout.Width(80));
-
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private void Row2Toolbar()
-        {
-            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
-
-            DrawBrushButton(CellContentType.Entrance, ColorBrushEntrance);
-            DrawBrushButton(CellContentType.Exit, ColorBrushExit);
-            DrawBrushButton(CellContentType.Boss, ColorBrushBoss);
-            DrawBrushButton(CellContentType.Eraser, ColorBrushErase);
-            DrawBrushButton(CellContentType.Event, ColorBrushEvent);
-            DrawBrushButton(CellContentType.Item, ColorBrushItem);
-            DrawBrushButton(CellContentType.Enemy, ColorBrushEnemy);
-
-            GUILayout.Space(4);
+            GUILayout.Space(8);
             string brushName = S.Brush switch
             {
                 CellContentType.Space => "区域",
@@ -144,9 +125,22 @@ namespace Features.CrawlerMap.Editor
             };
             string status = S.HasBrush ? brushName : "无画刷";
             GUILayout.Label(status, EditorStyles.miniLabel, GUILayout.Width(60));
-            GUILayout.Space(4);
 
-            DrawBrushButton(CellContentType.Space, ColorBrushSpace);
+            GUILayout.FlexibleSpace();
+
+            GUILayout.Label($"缩放 {S.Zoom * 100:F0}%", EditorStyles.miniLabel);
+            S.Zoom = GUILayout.HorizontalSlider(S.Zoom, 0.3f, 3f, GUILayout.Width(80));
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void Row2Toolbar()
+        {
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+
+            DrawBrushButton(CellContentType.Eraser, ColorBrushErase, false, "E");
+            DrawBrushButton(CellContentType.Wall, ColorBrushWall, true, "W");
+            DrawBrushButton(CellContentType.Space, ColorBrushSpace, true, "S");
             DrawBlockToolbarButton(1, 1, "1x1");
             DrawBlockToolbarButton(2, 2, "2x2");
             DrawBlockToolbarButton(3, 3, "3x3");
@@ -154,7 +148,14 @@ namespace Features.CrawlerMap.Editor
             DrawBlockToolbarButton(3, 2, "3x2");
             DrawBlockToolbarButton(4, 3, "4x3");
             DrawBlockToolbarButton(4, 4, "4x4");
-            DrawBrushButton(CellContentType.Wall, ColorBrushWall);
+
+            GUILayout.Space(8);
+            DrawBrushButton(CellContentType.Entrance, ColorBrushEntrance);
+            DrawBrushButton(CellContentType.Exit, ColorBrushExit);
+            DrawBrushButton(CellContentType.Boss, ColorBrushBoss);
+            DrawBrushButton(CellContentType.Event, ColorBrushEvent);
+            DrawBrushButton(CellContentType.Item, ColorBrushItem);
+            DrawBrushButton(CellContentType.Enemy, ColorBrushEnemy);
 
             GUILayout.FlexibleSpace();
 
@@ -164,7 +165,65 @@ namespace Features.CrawlerMap.Editor
             EditorGUILayout.EndHorizontal();
         }
 
-        private void DrawBrushButton(CellContentType type, Color swatchColor)
+        private static readonly (int w, int h)[] BlockSizes =
+        {
+            (1, 1), (2, 2), (3, 3), (2, 3), (3, 2), (4, 3), (4, 4)
+        };
+
+        private void HandleKeyboardShortcuts()
+        {
+            Event e = Event.current;
+            if (e.type != EventType.KeyDown || e.keyCode == KeyCode.None)
+            {
+                return;
+            }
+
+            if (S.Data == null)
+            {
+                return;
+            }
+
+            e.Use();
+            Repaint();
+
+            switch (e.keyCode)
+            {
+                case KeyCode.S:
+                    if (S.HasBrush && S.Brush == CellContentType.Space)
+                    {
+                        int idx = System.Array.FindIndex(BlockSizes, s => s.w == S.BlockW && s.h == S.BlockH);
+                        idx = (idx + 1) % BlockSizes.Length;
+                        S.BlockW = BlockSizes[idx].w;
+                        S.BlockH = BlockSizes[idx].h;
+                        S.SavedBlockW = S.BlockW;
+                        S.SavedBlockH = S.BlockH;
+                    }
+                    else
+                    {
+                        S.Brush = CellContentType.Space;
+                        S.BlockW = S.SavedBlockW;
+                        S.BlockH = S.SavedBlockH;
+                        S.HasBrush = true;
+                    }
+                    break;
+
+                case KeyCode.W:
+                    S.Brush = CellContentType.Wall;
+                    S.BlockW = 1;
+                    S.BlockH = 1;
+                    S.HasBrush = true;
+                    break;
+
+                case KeyCode.E:
+                    S.Brush = CellContentType.Eraser;
+                    S.BlockW = 1;
+                    S.BlockH = 1;
+                    S.HasBrush = true;
+                    break;
+            }
+        }
+
+        private void DrawBrushButton(CellContentType type, Color swatchColor, bool showColor = true, string shortcutKey = null)
         {
             bool isActive = S.HasBrush && S.Brush == type;
             string label = type switch
@@ -181,13 +240,25 @@ namespace Features.CrawlerMap.Editor
                 _ => "?"
             };
 
+            if (shortcutKey != null)
+            {
+                label += $"  [{shortcutKey}]";
+            }
+
             Color oldColor = GUI.color;
             if (isActive)
             {
                 GUI.color = new Color(0.6f, 0.8f, 1f);
             }
 
-            if (GUILayout.Button($"  {label}", EditorStyles.toolbarButton, GUILayout.Width(54)))
+            GUIStyle btnStyle = new GUIStyle(EditorStyles.toolbarButton);
+            if (showColor)
+            {
+                btnStyle.padding.left = 15;
+            }
+
+            int btnWidth = shortcutKey != null ? 72 : 54;
+            if (GUILayout.Button(label, btnStyle, GUILayout.Width(btnWidth)))
             {
                 if (isActive && S.HasBrush)
                 {
@@ -213,7 +284,7 @@ namespace Features.CrawlerMap.Editor
                 }
             }
 
-            if (Event.current.type == EventType.Repaint)
+            if (Event.current.type == EventType.Repaint && showColor)
             {
                 Rect lastRect = GUILayoutUtility.GetLastRect();
                 Rect swatch = new(lastRect.x + 3, lastRect.y + 3, 12, 12);
@@ -342,6 +413,9 @@ namespace Features.CrawlerMap.Editor
                     {
                         if (e.button == 0 && S.HasBrush && S.Data != null)
                         {
+                            S.IsPainting = true;
+                            S.LastPaintX = hoverX;
+                            S.LastPaintY = hoverY;
                             PaintCell(hoverX, hoverY);
                             e.Use();
                         }
@@ -363,12 +437,26 @@ namespace Features.CrawlerMap.Editor
                         S.PanOffset = S.PanStartOffset + new Vector2(delta.x, -delta.y);
                         e.Use();
                     }
+                    else if (mouseInRect && S.IsPainting && S.HasBrush && S.Data != null
+                             && (hoverX != S.LastPaintX || hoverY != S.LastPaintY)
+                             && (S.Brush == CellContentType.Eraser
+                              || S.Brush == CellContentType.Wall
+                              || S.Brush == CellContentType.Space))
+                    {
+                        S.LastPaintX = hoverX;
+                        S.LastPaintY = hoverY;
+                        PaintCell(hoverX, hoverY);
+                        e.Use();
+                    }
 
                     break;
 
                 case EventType.MouseUp:
                     if (e.button == 0 && S.HasBrush && S.Data != null)
                     {
+                        S.IsPainting = false;
+                        S.LastPaintX = -1;
+                        S.LastPaintY = -1;
                         AssetDatabase.SaveAssets();
                     }
 

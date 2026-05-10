@@ -47,11 +47,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bf9bd916b06f52444853f762ec8e3831
-    m_Address: TownBuildWin
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ce27491b786cff94cb87269e649a8cb9
     m_Address: BagPanel
     m_ReadOnly: 0

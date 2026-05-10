@@ -16,12 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 23cba4822cdd99046a7c560bfb9911e1
-  m_SerializeEntries:
-  - m_GUID: 1a77a639b197e6c42a2b12e94c17767b
-    m_Address: TownSceneObj
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 74fcbaa473ff1774b899b6f7866c9b7b, type: 2}
   m_SchemaSet:
