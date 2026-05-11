@@ -67,7 +67,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 4
+      Data: 6
     - Name: 
       Entry: 7
       Data: 
@@ -127,10 +127,37 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Features.Battle.UI.BattlePanelWin
+      Data: Features.Town.UI.TownWin
     - Name: $v
       Entry: 7
       Data: 5|JKFrame.UIWindowData, JKFrame
+    - Name: isCache
+      Entry: 5
+      Data: true
+    - Name: assetPath
+      Entry: 1
+      Data: TownWin
+    - Name: layerNum
+      Entry: 3
+      Data: 0
+    - Name: instance
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Features.Battle.UI.BattlePanelWin
+    - Name: $v
+      Entry: 7
+      Data: 6|JKFrame.UIWindowData, JKFrame
     - Name: isCache
       Entry: 5
       Data: false
@@ -157,13 +184,40 @@ MonoBehaviour:
       Data: Features.Bag.UI.BagPanelWin
     - Name: $v
       Entry: 7
-      Data: 6|JKFrame.UIWindowData, JKFrame
+      Data: 7|JKFrame.UIWindowData, JKFrame
     - Name: isCache
       Entry: 5
       Data: true
     - Name: assetPath
       Entry: 1
       Data: BagPanel
+    - Name: layerNum
+      Entry: 3
+      Data: 1
+    - Name: instance
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Features.Action.UI.ActionWin
+    - Name: $v
+      Entry: 7
+      Data: 8|JKFrame.UIWindowData, JKFrame
+    - Name: isCache
+      Entry: 5
+      Data: true
+    - Name: assetPath
+      Entry: 1
+      Data: ActionWin
     - Name: layerNum
       Entry: 3
       Data: 1

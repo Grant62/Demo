@@ -12,6 +12,7 @@
 
 ## Development Flow
 
+0. **使用中文思考和交流** — All thinking, planning, code comments, and communication with the user must be in Chinese (中文).
 1. **先写计划，再写代码** — Before implementing or modifying any feature, output in this order:
    - **Plan**: 1–2 implementation approaches
    - **Change List**: which files need to be modified / created

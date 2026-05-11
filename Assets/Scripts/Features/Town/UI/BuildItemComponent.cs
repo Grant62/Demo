@@ -1,4 +1,3 @@
-using System;
 using Features.Town.Application;
 using TMPro;
 using UnityEngine;
@@ -12,7 +11,7 @@ namespace Features.Town.UI
         [SerializeField] private TMP_Text _nameCostText;
         [SerializeField] private TMP_Text _spaceCostText;
 
-        public void Init(BuildingConfig config, Action onClick)
+        public void Init(BuildingConfig config, System.Action onClick)
         {
             _nameCostText.text = $"{config.displayName}  {config.goldCost}金";
             _spaceCostText.text = $"{config.spaceCost}费";
