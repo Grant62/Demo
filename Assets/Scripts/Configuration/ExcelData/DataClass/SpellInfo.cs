@@ -5,6 +5,7 @@ namespace Configuration.ExcelData.DataClass
         public int Id;
         public string Name;
         public int Cost;
+        public string IconAdd;
         public string Desc;
     }
 }

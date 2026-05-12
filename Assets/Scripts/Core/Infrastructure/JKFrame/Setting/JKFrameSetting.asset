@@ -67,34 +67,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 6
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Main.UI.GoldWin
-    - Name: $v
-      Entry: 7
-      Data: 3|JKFrame.UIWindowData, JKFrame
-    - Name: isCache
-      Entry: 5
-      Data: true
-    - Name: assetPath
-      Entry: 1
-      Data: GoldWin
-    - Name: layerNum
-      Entry: 3
-      Data: 0
-    - Name: instance
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 5
     - Name: 
       Entry: 7
       Data: 
@@ -103,7 +76,7 @@ MonoBehaviour:
       Data: Main.GM.GmPanelWindow
     - Name: $v
       Entry: 7
-      Data: 4|JKFrame.UIWindowData, JKFrame
+      Data: 3|JKFrame.UIWindowData, JKFrame
     - Name: isCache
       Entry: 5
       Data: true
@@ -130,7 +103,7 @@ MonoBehaviour:
       Data: Features.Town.UI.TownWin
     - Name: $v
       Entry: 7
-      Data: 5|JKFrame.UIWindowData, JKFrame
+      Data: 4|JKFrame.UIWindowData, JKFrame
     - Name: isCache
       Entry: 5
       Data: true
@@ -157,7 +130,7 @@ MonoBehaviour:
       Data: Features.Battle.UI.BattlePanelWin
     - Name: $v
       Entry: 7
-      Data: 6|JKFrame.UIWindowData, JKFrame
+      Data: 5|JKFrame.UIWindowData, JKFrame
     - Name: isCache
       Entry: 5
       Data: false
@@ -181,16 +154,16 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: Features.Bag.UI.BagPanelWin
+      Data: Features.Bag.UI.BagWin
     - Name: $v
       Entry: 7
-      Data: 7|JKFrame.UIWindowData, JKFrame
+      Data: 6|JKFrame.UIWindowData, JKFrame
     - Name: isCache
       Entry: 5
       Data: true
     - Name: assetPath
       Entry: 1
-      Data: BagPanel
+      Data: BagWin
     - Name: layerNum
       Entry: 3
       Data: 1
@@ -211,7 +184,7 @@ MonoBehaviour:
       Data: Features.Action.UI.ActionWin
     - Name: $v
       Entry: 7
-      Data: 8|JKFrame.UIWindowData, JKFrame
+      Data: 7|JKFrame.UIWindowData, JKFrame
     - Name: isCache
       Entry: 5
       Data: true

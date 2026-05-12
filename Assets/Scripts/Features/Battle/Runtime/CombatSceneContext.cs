@@ -10,6 +10,7 @@ namespace Features.Battle.Runtime
         private void Awake()
         {
             EnergySystem.Initialize();
+            MpSystem.Initialize();
         }
 
         private void Start()

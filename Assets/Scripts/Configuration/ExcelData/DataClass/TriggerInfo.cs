@@ -2,11 +2,12 @@ namespace Configuration.ExcelData.DataClass
 {
     public class TriggerInfo
     {
-        public int RoomId;
+        public int TriggerId;
         public string Name;
         public string TriggerType;
-        public string EnemyList;
+        public string EnemySet;
         public int EventId;
-        public int MaterialId;
+        public int SupplyId;
+        public int RecruitId;
     }
 }

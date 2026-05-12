@@ -1,3 +1,4 @@
+using System;
 using Features.CrawlerMap.Domain;
 using UnityEditor;
 using UnityEngine;
@@ -191,7 +192,7 @@ namespace Features.CrawlerMap.Editor
                 case KeyCode.S:
                     if (S.HasBrush && S.Brush == CellContentType.Space)
                     {
-                        int idx = System.Array.FindIndex(BlockSizes, s => s.w == S.BlockW && s.h == S.BlockH);
+                        int idx = Array.FindIndex(BlockSizes, s => s.w == S.BlockW && s.h == S.BlockH);
                         idx = (idx + 1) % BlockSizes.Length;
                         S.BlockW = BlockSizes[idx].w;
                         S.BlockH = BlockSizes[idx].h;
@@ -205,6 +206,7 @@ namespace Features.CrawlerMap.Editor
                         S.BlockH = S.SavedBlockH;
                         S.HasBrush = true;
                     }
+
                     break;
 
                 case KeyCode.W:
@@ -251,7 +253,7 @@ namespace Features.CrawlerMap.Editor
                 GUI.color = new Color(0.6f, 0.8f, 1f);
             }
 
-            GUIStyle btnStyle = new GUIStyle(EditorStyles.toolbarButton);
+            GUIStyle btnStyle = new(EditorStyles.toolbarButton);
             if (showColor)
             {
                 btnStyle.padding.left = 15;
@@ -440,8 +442,8 @@ namespace Features.CrawlerMap.Editor
                     else if (mouseInRect && S.IsPainting && S.HasBrush && S.Data != null
                              && (hoverX != S.LastPaintX || hoverY != S.LastPaintY)
                              && (S.Brush == CellContentType.Eraser
-                              || S.Brush == CellContentType.Wall
-                              || S.Brush == CellContentType.Space))
+                                 || S.Brush == CellContentType.Wall
+                                 || S.Brush == CellContentType.Space))
                     {
                         S.LastPaintX = hoverX;
                         S.LastPaintY = hoverY;

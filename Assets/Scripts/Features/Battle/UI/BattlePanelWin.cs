@@ -22,7 +22,7 @@ namespace Features.Battle.UI
 
         private void OnBagClick()
         {
-            UISystem.Show<BagPanelWin>();
+            UISystem.Show<BagWin>();
         }
     }
 }

@@ -11,7 +11,11 @@ namespace Features.Action.Domain
         public virtual void OnTakeDamage(MercenaryModel model, ref int damage, ActionResult result, BattleContext context) { }
         public virtual void OnKill(MercenaryModel model, ActionResult result, BattleContext context) { }
         public virtual void OnTurnStart(MercenaryModel model, ActionResult result, BattleContext context) { }
-        public virtual int GetForcedTargetIndex(MercenaryModel model, BattleContext context) => -1;
+
+        public virtual int GetForcedTargetIndex(MercenaryModel model, BattleContext context)
+        {
+            return -1;
+        }
 
         public static EntryEffect Create(EntryInfo entry)
         {
@@ -44,9 +48,7 @@ namespace Features.Action.Domain
     {
         public TenacityEffect() { EntryId = 1; }
 
-        public override void OnUse(MercenaryModel model, ActionResult result, BattleContext context)
-        {
-        }
+        public override void OnUse(MercenaryModel model, ActionResult result, BattleContext context) { }
 
         public override void OnTakeDamage(MercenaryModel model, ref int damage, ActionResult result, BattleContext context)
         {
@@ -131,6 +133,7 @@ namespace Features.Action.Domain
                     weakest = i;
                 }
             }
+
             return weakest;
         }
 

@@ -1,3 +1,4 @@
+using Features.Battle.Domain;
 using JKFrame;
 
 namespace Features.Battle.Application
@@ -6,7 +7,7 @@ namespace Features.Battle.Application
     {
         public static void StartPlayerTurn()
         {
-            Domain.TurnSystem.StartPlayerTurn();
+            TurnSystem.StartPlayerTurn();
         }
 
         public static void StartEnemyTurn()

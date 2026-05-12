@@ -5,7 +5,7 @@ namespace Features.Battle.Domain
     public static class EnergySystem
     {
         public static int CurrentEnergy { get; private set; }
-        public static int MaxEnergy { get; private set; } = 3;
+        public static int MaxEnergy { get; private set; } = 5;
 
         public static void Initialize()
         {
@@ -27,7 +27,7 @@ namespace Features.Battle.Domain
         }
 
         /// <summary>
-        /// 按雇佣兵 Point 消耗能量：正数=固定消耗，0=免费，-1=清空全部剩余能量
+        ///     按雇佣兵 Point 消耗能量：正数=固定消耗，0=免费，-1=清空全部剩余能量
         /// </summary>
         public static bool TrySpendByPoint(int point)
         {

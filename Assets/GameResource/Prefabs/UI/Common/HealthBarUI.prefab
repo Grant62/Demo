@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 200, y: 29.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &672169057467493831
 CanvasRenderer:
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -143,7 +143,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1142050822446280003}
-  - component: {fileID: 3777955151876863647}
+  - component: {fileID: 3635445576557917244}
   - component: {fileID: 1984852459155316289}
   - component: {fileID: 6599915975370855128}
   m_Layer: 5
@@ -174,7 +174,7 @@ RectTransform:
   m_AnchoredPosition: {x: 40, y: -10}
   m_SizeDelta: {x: 200, y: 29.800003}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &3777955151876863647
+--- !u!114 &3635445576557917244
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -183,11 +183,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6290370108441619750}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f19cbb0ff05b9c4ea26a4e0fc7b3f42, type: 3}
+  m_Script: {fileID: 11500000, guid: 0483ed32d86ee3047931a4c13153f52d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hpText: {fileID: 2301125330326846449}
-  _hpFillImage: {fileID: 7724661906672917572}
+  _fillImage: {fileID: 7724661906672917572}
+  _amountText: {fileID: 2301125330326846449}
 --- !u!222 &1984852459155316289
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -210,7 +210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.4415095, g: 0.4415095, b: 0.4415095, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -285,7 +285,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
