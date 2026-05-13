@@ -14,6 +14,6 @@ namespace Configuration.ExcelData.DataClass
         public int MagDef;
         public int ActionSpeed;
         public int IsBoss;
-        public string ResAddress;
+        public string IconAdd;
     }
 }

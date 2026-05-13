@@ -29,6 +29,9 @@ namespace Features.Action.UI
         [Header("雇佣兵面板")]
         [SerializeField] private Transform _mercenaryBoard;
 
+        [Header("敌人面板")]
+        [SerializeField] private Transform _enemyBoard;
+
         [Header("右侧按钮")]
         [SerializeField] private Button _endTurnBtn;
         [SerializeField] private Button _mapBtn;
@@ -39,10 +42,12 @@ namespace Features.Action.UI
         [SerializeField] private QuickSlot _spellSlotPrefab;
         [SerializeField] private QuickSlot _itemSlotPrefab;
         [SerializeField] private MercenaryController mercenaryControllerPrefab;
+        [SerializeField] private Enemy _enemyPrefab;
 
         private readonly List<QuickSlot> _spellSlots = new();
         private readonly List<QuickSlot> _itemSlots = new();
         private readonly List<MercenaryController> _mercenaryCards = new();
+        private readonly List<Enemy> _enemies = new();
 
         public event Action<int> OnSpellSlotClicked;
         public event Action<int> OnItemSlotClicked;
@@ -62,6 +67,8 @@ namespace Features.Action.UI
                 LoadItems();
             if (_spellGrid.childCount == 0)
                 LoadSpells();
+            if (_enemyBoard.childCount == 0)
+                LoadEnemies();
         }
 
         public override void OnClose()
@@ -202,6 +209,37 @@ namespace Features.Action.UI
         {
             foreach (MercenaryController card in _mercenaryCards)
                 card.UpdateUI();
+        }
+        #endregion
+
+        #region 敌人
+        public void LoadEnemies()
+        {
+            if (!EnemyDeployService.TryGetDeployData(out List<EnemyInfo> list)) return;
+            LoadEnemies(list);
+        }
+
+        public void LoadEnemies(IReadOnlyList<EnemyInfo> enemies)
+        {
+            ClearEnemies();
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                Enemy enemy = Instantiate(_enemyPrefab, _enemyBoard);
+                enemy.Setup(enemies[i], enemies[i].InitATK, enemies[i].InitHP);
+                _enemies.Add(enemy);
+            }
+        }
+
+        public void ClearEnemies()
+        {
+            for (int i = _enemies.Count - 1; i >= 0; i--)
+                Destroy(_enemies[i].gameObject);
+            _enemies.Clear();
+        }
+
+        public void UpdateEnemyHP(int index, int current, int max)
+        {
+            _enemies[index].UpdateHP(current, max);
         }
         #endregion
     }

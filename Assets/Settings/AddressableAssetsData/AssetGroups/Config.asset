@@ -22,6 +22,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e6a5293c00a3e240850c09065ae142a
+    m_Address: EnemyDeployConfig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7d613c19458a7fe43bcc186a6c174ae7
     m_Address: MercenaryDeployConfig
     m_ReadOnly: 0
